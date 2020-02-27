@@ -2,16 +2,17 @@
 <html lang="en-US">
   <head>
     <title>Tripography</title>
-    <link href="https://fonts.googleapis.com/css?family=Istok+Web:400,700|Lora&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700|Zilla+Slab:400,500,600&display=swap" rel="stylesheet">
+    <link rel="icon" href="./images/favicon-32x32.png" />
   </head>
   <body>
     <header>
-      <h1>Tripography</h1>
+      <h1><img src="./images/tripography-logo.svg" alt="">Tripography</h1>
     </header>
     <main>
       <section id="loginView">
         <h2>Login</h2>
-        <form class="login-form" action="#" method="">
+        <form class="login-form">
           <div class="field">
             <label for="userName">Username:</label>
             <input id="userName" type="text" name="username" value="">
@@ -19,8 +20,9 @@
           <div class="field">
             <label for="password">Password:</label>
             <input id="password" type="password" name="password" value="">
+            <span class="js-error-message">
           </div>
-          <button id="loginButton" type="submit">Login</button>
+          <button id="loginButton" type="button" disabled="true">Login</button>
         </form>
 
       </section>

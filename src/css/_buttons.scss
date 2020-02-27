@@ -1,3 +1,16 @@
+button {
+  border-radius: 2px;
+
+  &:hover {
+    cursor:pointer;
+  }
+
+  &:disabled {
+    cursor: no-drop;
+    opacity:.6;
+  }
+}
+
 #loginButton {
   background-color: $blue;
   padding:10px 20px;

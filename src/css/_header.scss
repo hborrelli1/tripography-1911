@@ -4,5 +4,13 @@ header {
     text-align: center;
     margin-bottom:0px;
     font-weight:500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      margin-right:10px;
+      max-width:50px;
+    }
   }
 }
