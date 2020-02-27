@@ -2,7 +2,9 @@ import chai from 'chai';
 const expect = chai.expect;
 
 import Traveler from '../src/traveler';
+import Trip from '../src/trip';
 import travelerData from '../sample-data/traveler-data';
+import tripData from '../sample-data/trip-data';
 
 describe('Traveler Tests', function() {
   let traveler;
@@ -29,20 +31,14 @@ describe('Traveler Tests', function() {
 
     beforeEach(function() {
       traveler = new Traveler(travelerData.travelers[0]);
-      trip = {
-        "id": 1,
-        "userID": 44,
-        "destinationID": 49,
-        "travelers": 1,
-        "date": "2019/09/16",
-        "duration": 8,
-        "status": "approved",
-        "suggestedActivities": []
-      }
+      trip = new Trip(tripData.trips[0]);
     });
 
     it('should be able to make trip request', function() {
-      expect(traveler.makeTripRequest(trip)).to.deep.equal(trip);
+      let newTrip = traveler.makeTripRequest(trip);
+
+      expect(newTrip.userID).to.deep.equal(44);
+      expect(newTrip.destinationID).to.equal(49);
     });
   });
 });

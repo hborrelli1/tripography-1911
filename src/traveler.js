@@ -1,3 +1,5 @@
+import Trip from './trip';
+
 class Traveler {
   constructor(travelerInfo) {
     this.id = travelerInfo.id;
@@ -6,16 +8,7 @@ class Traveler {
   }
 
   makeTripRequest(tripInfo) {
-    return {
-      id: tripInfo.id,
-      userID: tripInfo.userID,
-      destinationID: tripInfo.destinationID,
-      travelers: tripInfo.travelers,
-      date: tripInfo.date,
-      duration: tripInfo.duration,
-      status: tripInfo.status,
-      suggestedActivities: tripInfo.suggestedActivities
-    }
+    return new Trip(tripInfo);
   }
 }
 
