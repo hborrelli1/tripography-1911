@@ -1,6 +1,23 @@
-/* This is an example of using Sass, otherwise plain CSS works too*/
-$primary-background: pink;
+@import './variables.scss';
+@import './header.scss';
+@import './fonts.scss';
+@import './buttons.scss';
+@import './login.scss';
+
+*, *::before, *::after {
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+}
 
 body {
   background-color: $primary-background;
+}
+
+main {
+  display: flex;
+  height:calc(100vh - 238px);
+  flex-flow:wrap;
+  justify-content: center;
+  align-items: center;
 }
