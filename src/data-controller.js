@@ -3,16 +3,18 @@ class DataController {
 
   }
 
-  getTravelers() {
-    // let allTravelers;
-    console.log('getTravelers method firing:');
-    
-    return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers')
-      .then(res => res.json())
-      .then(data => data)
-      .catch(err => console.log(err.message));
+  async getUsersTrips(userID) {
+    let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
+    let allTrips = await response.json();
+    let filteredUserTrips = await allTrips.trips.filter(trip => trip.userID === userID);
+    return filteredUserTrips;
+  }
 
-    // return allTravelers;
+  async getSingleUser(userID) {
+    let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers')
+    let allUsers = await response.json();
+    let foundUser = await allUsers.travelers.find(user => user.id === userID);
+    return foundUser;
   }
 }
 
