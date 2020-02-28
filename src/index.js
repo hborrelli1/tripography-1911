@@ -19,9 +19,9 @@ let currentUsersTrips;
 const currentTraveler = async (newUserID) => {
   // call dataController to get all users
   currentUser = await dataController.getSingleUser(newUserID);
-  currentUser = new Traveler(currentUser);
+  currentUser = new Traveler(currentUser, getCurrentUsersTrips(newUserID));
 
-  getCurrentUsersTrips(newUserID)
+
 }
 
 const getCurrentUsersTrips = async (newUserID) => {

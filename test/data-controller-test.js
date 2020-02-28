@@ -11,7 +11,7 @@ describe('DataController Tests', function() {
   });
 
   it('should be able to instantiate & inherit properties', function() {
-    expect(dataController.getTravelers().length).to.equal(50);
+    expect(dataController.getUsersTrips(40).length).to.equal(6);
   });
 
 });
