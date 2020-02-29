@@ -1,7 +1,7 @@
 #loginView {
   border: 1px solid $lighter-gray;
   padding: 50px 30px;
-  box-shadow: 3px 3px 15px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: $box-shadow;
   min-width:350px;
 
   h2 {

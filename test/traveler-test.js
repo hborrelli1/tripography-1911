@@ -58,12 +58,11 @@ describe('Traveler Tests', function() {
     it('should be able to make trip request', function() {
       let newTrip = traveler.makeTripRequest(trip);
 
-      expect(newTrip.userID).to.deep.equal(44);
+      expect(newTrip.userID).to.deep.equal(1);
       expect(newTrip.destinationID).to.equal(49);
     });
 
     it('should be able to hold on to their trips', function() {
-      console.log(traveler);
       expect(traveler.myTrips).to.deep.equal({
         "id": 1,
         "userID": 1,

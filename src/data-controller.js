@@ -16,6 +16,13 @@ class DataController {
     let foundUser = await allUsers.travelers.find(user => user.id === userID);
     return foundUser;
   }
+
+  // async getAllDestinations() {
+  //   let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/destinations')
+  //   let allDestinations = await response.json();
+  //   return allDestinations;
+  // }
+
 }
 
 export default DataController;

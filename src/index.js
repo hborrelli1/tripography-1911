@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import domUpdates from './domUpdates';
-import dashboardConstructor from './dashboard';
 
 import './css/base.scss';
 
@@ -10,24 +9,39 @@ import './images/favicon-32x32.png'
 
 import DataController from './data-controller';
 import Traveler from './traveler';
+import Trip from './trip';
 
 let dataController = new DataController();
 let currentUser;
 let currentUsersTrips;
+let allDestinations;
 
-// Fire function to instantiate traveler
-const currentTraveler = async (newUserID) => {
-  // call dataController to get all users
+const getAllDestinations = async () => {
+  let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/destinations');
+  allDestinations = await response.json();
+}
+
+getAllDestinations();
+
+domUpdates.eventListeners();
+
+const instantiateTraveler = async (newUserID) => {
   currentUser = await dataController.getSingleUser(newUserID);
-  currentUser = new Traveler(currentUser, getCurrentUsersTrips(newUserID));
-
-
-}
-
-const getCurrentUsersTrips = async (newUserID) => {
   currentUsersTrips = await dataController.getUsersTrips(newUserID);
+  currentUsersTrips = currentUsersTrips.map(trip => {
+    let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID);
+    return new Trip(trip, tripDestination);
+  });
+  currentUser = new Traveler(currentUser, currentUsersTrips);
 
-  currentUser.myTrips = currentUsersTrips;
+  console.log(currentUser);
+  populateDom(currentUser);
 }
 
-export default currentTraveler;
+const populateDom = (currentUser) => {
+  domUpdates.populateUserWidget(currentUser);
+  domUpdates.populateTripsWidgetFilter(currentUser);
+  domUpdates.populateTripsList(currentUser);
+}
+
+export default instantiateTraveler;
