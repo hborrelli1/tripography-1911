@@ -1,0 +1,54 @@
+.widget {
+  padding:30px 20px;
+  border: 2px solid #000;
+}
+
+.user-profile-widget {
+  display:flex;
+  flex-flow:column;
+  align-self: flex-start;
+  width:20%;
+  margin-right:5%;
+}
+
+.trip-widget {
+  width:75%;
+
+  .trip-filter-bar {
+    display:flex;
+    align-items: center;
+    margin-bottom:30px;
+  }
+}
+
+.traveler-trip-list {
+  .trip {
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    background-color: #FFF;
+    // background-color: $light-green;
+    box-shadow: $box-shadow;
+
+    .img-wrap {
+      width:40%;
+      height:auto;
+      background-size:cover;
+      background-position:center;
+      margin-right:20px;
+      align-self: stretch;
+    }
+
+    .trip-content {
+      padding: 20px 0px;
+
+      h3 {
+        margin-bottom:10px;
+      }
+
+      p {
+        font-size:14px;
+      }
+    }
+  }
+}

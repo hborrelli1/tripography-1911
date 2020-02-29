@@ -22,7 +22,7 @@ describe('Trip Tests', function() {
     });
 
     it('should be able to have a userID', function() {
-      expect(trip.userID).to.equal(44);
+      expect(trip.userID).to.equal(1);
     });
 
     it('should be able to have a destinationID', function() {

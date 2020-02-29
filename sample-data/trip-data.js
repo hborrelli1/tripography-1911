@@ -2,7 +2,7 @@ const tripData = {
   "trips": [
     {
       "id": 1,
-      "userID": 44,
+      "userID": 1,
       "destinationID": 49,
       "travelers": 1,
       "date": "2019/09/16",
@@ -32,7 +32,7 @@ const tripData = {
     },
     {
       "id": 4,
-      "userID": 43,
+      "userID": 1,
       "destinationID": 14,
       "travelers": 2,
       "date": "2020/02/25",

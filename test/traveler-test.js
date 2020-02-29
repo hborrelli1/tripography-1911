@@ -8,6 +8,7 @@ import tripData from '../sample-data/trip-data';
 
 describe('Traveler Tests', function() {
   let traveler;
+  let myTrips;
 
   describe('Test Traveler properties', function() {
 
@@ -30,15 +31,57 @@ describe('Traveler Tests', function() {
     let trip;
 
     beforeEach(function() {
-      traveler = new Traveler(travelerData.travelers[0]);
+      traveler = new Traveler(travelerData.travelers[0], myTrips);
       trip = new Trip(tripData.trips[0]);
+      myTrips = {
+        "id": 1,
+        "userID": 1,
+        "destinationID": 49,
+        "travelers": 1,
+        "date": "2019/09/16",
+        "duration": 8,
+        "status": "approved",
+        "suggestedActivities": []
+      },{
+        "id": 4,
+        "userID": 1,
+        "destinationID": 14,
+        "travelers": 2,
+        "date": "2020/02/25",
+        "duration": 10,
+        "status": "approved",
+        "suggestedActivities": []
+      }
+
     });
 
     it('should be able to make trip request', function() {
       let newTrip = traveler.makeTripRequest(trip);
 
-      expect(newTrip.userID).to.deep.equal(44);
+      expect(newTrip.userID).to.deep.equal(1);
       expect(newTrip.destinationID).to.equal(49);
+    });
+
+    it('should be able to hold on to their trips', function() {
+      expect(traveler.myTrips).to.deep.equal({
+        "id": 1,
+        "userID": 1,
+        "destinationID": 49,
+        "travelers": 1,
+        "date": "2019/09/16",
+        "duration": 8,
+        "status": "approved",
+        "suggestedActivities": []
+      },{
+        "id": 4,
+        "userID": 1,
+        "destinationID": 14,
+        "travelers": 2,
+        "date": "2020/02/25",
+        "duration": 10,
+        "status": "approved",
+        "suggestedActivities": []
+      });
     });
   });
 });
