@@ -6,16 +6,16 @@ class Traveler {
     this.name = travelerInfo.name;
     this.travelerType = travelerInfo.travelerType;
     this.myTrips = myTrips;
-    this.totalSpent = this.getTotalAmountSpentThisYear();
+    // this.totalSpent = this.getTotalAmountSpentThisYear();
   }
 
   makeTripRequest(tripInfo) {
     return new Trip(tripInfo);
   }
 
-  getTotalAmountSpentThisYear() {
-    return myTrips
-  }
+  // getTotalAmountSpentThisYear() {
+  //   return myTrips
+  // }
 }
 
 export default Traveler;
