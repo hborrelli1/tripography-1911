@@ -8,13 +8,16 @@ import './images/tripography-logo.svg'
 import './images/favicon-32x32.png'
 
 import DataController from './data-controller';
+import User from './user';
 import Traveler from './traveler';
 import Trip from './trip';
+import Agent from './agent';
 
 let dataController = new DataController();
 let currentUser;
 let currentUsersTrips;
 let allDestinations;
+let agent;
 
 const getAllDestinations = async () => {
   let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/destinations');
@@ -55,23 +58,44 @@ const invokeTravelerAccount = (username) => {
 const instantiateTraveler = async (newUserID) => {
   currentUser = await dataController.getSingleUser(newUserID);
   currentUsersTrips = await dataController.getUsersTrips(newUserID);
+
   currentUsersTrips = currentUsersTrips.map(trip => {
     let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID);
     return new Trip(trip, tripDestination);
   });
-  currentUser = new Traveler(currentUser, currentUsersTrips);
 
-  populateTravelDashboard(currentUser);
+  currentUser = new Traveler('traveler', currentUsersTrips, currentUser);
+  populateTravelDashboard(currentUser, newUserID);
 }
 
-const populateTravelDashboard = (currentUser) => {
+const populateTravelDashboard = async (currentUser, newUserID) => {
+  currentUsersTrips = await dataController.getUsersTrips(newUserID);
+
   domUpdates.populateUserWidget(currentUser);
   domUpdates.populateTripsWidgetFilter(currentUser);
   domUpdates.populateTripsList(currentUser);
 }
 
-const populateAgentDashboard = () => {
-  
+const populateAgentDashboard = async () => {
+  let allTrips = await dataController.getUsersTrips();
+
+  allTrips = allTrips.trips.map(trip => {
+    let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+    return new Trip(trip, tripDestination);
+  });
+
+  agent = new Agent('agent', allTrips);
+  console.log(agent);
+  domUpdates.populateUserWidget(agent);
+  domUpdates.populateTripsWidgetFilter(agent)
+
+  let pendingTrips = await dataController.getPendingTrips();
+  pendingTrips = pendingTrips.map(trip => {
+    let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+    return new Trip(trip, tripDestination);
+  });
+  // Display
+  domUpdates.populatePendingTrips(pendingTrips);
 }
 
 // Start App
