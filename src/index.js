@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import domUpdates from './domUpdates';
+var moment = require('moment');
 
 import './css/base.scss';
 
@@ -86,6 +87,7 @@ const populateAgentDashboard = async () => {
 
   agent = new Agent('agent', allTrips);
   console.log(agent);
+  agent.getTodaysTravelers(allTrips);
   domUpdates.populateUserWidget(agent);
   domUpdates.populateTripsWidgetFilter(agent)
 
