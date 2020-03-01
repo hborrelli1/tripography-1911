@@ -6,11 +6,6 @@ let dataController = new DataController();
 const domUpdates = {
   userType: null,
 
-  eventListeners() {
-    $('#loginButton').on('click', domUpdates.login);
-    $('#userName, #password').on('keyup', domUpdates.validateForm);
-  },
-
   validateForm() {
     if ( ($('#userName').val() !== '') && ($('#password').val() !== '') ) {
       $('#loginButton').removeAttr('disabled');
@@ -19,50 +14,42 @@ const domUpdates = {
     }
   },
 
-  invokeAgentAccount() {
-    console.log('agency');
-  },
+  // invokeAgentAccount() {
+  //   console.log('agency');
+  // },
+  //
+  // invokeTravelerAccount(username) {
+  //   let numberPattern = /\d+/g;
+  //   let newUserID = Number(username.match(numberPattern)[0]);
+  //   instantiateTraveler(newUserID);
+  // },
 
-  invokeTravelerAccount(username) {
-    // Grab last two digits of username
-    let numberPattern = /\d+/g;
-    let newUserID = Number(username.match(numberPattern)[0]);
-
-    // Create new user with userID
-    instantiateTraveler(newUserID);
-  },
-
-  login() {
-    const agencyUser = $('#userName').val() === 'agency';
-    const travelerUser = $('#userName').val().match(/traveler/);
-    const password = $('#password').val() === 'travel2020';
-
-    // validate if username has a number for the last digit
-    if (!password) {
-      $('.js-error-message').text('Your password is incorrect, please try again.');
-      $('#password').addClass('js-error');
-      return;
-    }
-
-    if (agencyUser && password) {
-      domUpdates.invokeAgentAccount();
-    } else if (travelerUser && password) {
-      domUpdates.invokeTravelerAccount($('#userName').val());
-    }
-
-    domUpdates.removeLoginView();
-  },
-
-  removeLoginView() {
-    $('#loginView').remove();
-  },
+  // login() {
+  //   const agencyUser = $('#userName').val() === 'agency';
+  //   const travelerUser = $('#userName').val().match(/traveler/);
+  //   const password = $('#password').val() === 'travel2020';
+  //
+  //   if (!password) {
+  //     $('.js-error-message').text('Your password is incorrect, please try again.');
+  //     $('#password').addClass('js-error');
+  //     return;
+  //   }
+  //
+  //   if (agencyUser && password) {
+  //     domUpdates.invokeAgentAccount();
+  //   } else if (travelerUser && password) {
+  //     domUpdates.invokeTravelerAccount($('#userName').val());
+  //   }
+  //
+  //   $('#loginView').remove();
+  // },
 
   populateUserWidget(userInfo) {
     let userWidget = `<section class="user-profile-widget widget">
       <h2>User Info</h2>
       <h4 id="userTitle">${userInfo.name}</h4>
-      <p id="totalSpent">${userInfo.amountSpent}</p>
-      <p id="tripCounter">${userInfo.myTrips.length}</p>
+      <p id="totalSpent">Total spent this year: ${userInfo.totalSpent}</p>
+      <p id="tripCounter">Trip Counter: ${userInfo.myTrips.length}</p>
     </section>`;
 
     $('main').addClass('travel-dashboard').append('<div class="margin-wrapper"></div>');
@@ -89,7 +76,6 @@ const domUpdates = {
 
   populateTripsList(userInfo) {
     let listOfTrips = '';
-    console.log(userInfo.myTrips);
     userInfo.myTrips.forEach(trip => {
       listOfTrips += `<li class="trip">
         <div class="img-wrap" style="background-image:url('${trip.destinationInfo.image}');"></div>
@@ -107,7 +93,5 @@ const domUpdates = {
     $('.trip-widget').append(`<ul class="traveler-trip-list">${listOfTrips}</ul>`);
   }
 }
-
-
 
 export default domUpdates;

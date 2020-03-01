@@ -1,8 +1,8 @@
-import DataController from './data-controller';
+// import DataController from './data-controller';
 
-class Trip extends DataController {
+class Trip {
   constructor(trip, tripDestination) {
-    super(trip)
+    // super(trip)
     this.id = trip.id;
     this.userID = trip.userID;
     this.destinationID = trip.destinationID;
@@ -15,9 +15,9 @@ class Trip extends DataController {
     this.destinationInfo = tripDestination;
   }
 
-  getDestinationInfo() {
-    this.destinationInfo = allDestinations.find(destination => destination.id === this.destinationID);
-  }
+  // getDestinationInfo() {
+  //   this.destinationInfo = allDestinations.find(destination => destination.id === this.destinationID);
+  // }
 }
 
 export default Trip;
