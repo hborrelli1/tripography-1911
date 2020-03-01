@@ -21,7 +21,7 @@ const domUpdates = {
 
     let counter = userInfo.userType === 'traveler'
       ? `<p id="tripCounter">Trip Counter: ${userInfo.myTrips.length}</p>`
-      : `<p id="numberOfTravelersToday">Number of Travelers today: ${userInfo.numOfTravelersToday}</p>`
+      : `<p id="numberOfTravelersToday">Number of Travelers today: ${userInfo.todaysTravelers}</p>`
 
     let userWidget = `<section class="user-profile-widget widget">
       <h2>User Info</h2>
