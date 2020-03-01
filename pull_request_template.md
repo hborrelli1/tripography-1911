@@ -20,5 +20,10 @@
 - [ ] trip.js
 - [ ] trip-test.js
 - [ ] data-controller.js
+- [ ] data-controller-test.js
 - [ ] domUpdates.js
+- [ ] user.js
+- [ ] user-test.js
+- [ ] agent.js
+- [ ] agent-test.js
 - [ ] Other files:
