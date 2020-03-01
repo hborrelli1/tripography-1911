@@ -10,8 +10,8 @@ describe('DataController Tests', function() {
     dataController = new DataController();
   });
 
-  it('should be able to instantiate & inherit properties', function() {
-    expect(dataController.getUsersTrips(40).length).to.equal(6);
-  });
+  // it('should be able to instantiate & inherit properties', function() {
+  //   expect(dataController.getUsersTrips(40).length).to.equal(6);
+  // });
 
 });

@@ -16,12 +16,8 @@ class Agent extends User {
     // Loop through all trips. capture start and end date.
     let currentTrips = allTrips.filter(trip => {
       let startDate = moment(trip.date, 'YYYY/MM/DD');
-      // console.log('startDate: ', startDate);
-      // console.log('duration: ', trip.duration);
       let endDate = moment(trip.date, 'YYYY/MM/DD').add(trip.duration, 'days').format('YYYY/MM/DD');
-      // console.log('endDate: ', endDate);
 
-      console.log('momentIsBetween: ', moment(now).isBetween(startDate, endDate));
       // If today is inbetween increment counter.
       return moment(now).isBetween(startDate, endDate);
     })
