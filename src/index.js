@@ -21,9 +21,36 @@ const getAllDestinations = async () => {
   allDestinations = await response.json();
 }
 
-getAllDestinations();
+const login = () => {
+  const agencyUser = $('#userName').val() === 'agency';
+  const travelerUser = $('#userName').val().match(/traveler/);
+  const password = $('#password').val() === 'travel2020';
 
-domUpdates.eventListeners();
+  if (!password) {
+    $('.js-error-message').text('Your password is incorrect, please try again.');
+    $('#password').addClass('js-error');
+    return;
+  }
+
+  if (agencyUser && password) {
+    invokeAgentAccount();
+  } else if (travelerUser && password) {
+    invokeTravelerAccount($('#userName').val());
+  }
+
+  $('#loginView').remove();
+}
+
+const invokeAgentAccount = () => {
+  console.log('agency');
+  populateAgentDashboard();
+}
+
+const invokeTravelerAccount = (username) => {
+  let numberPattern = /\d+/g;
+  let newUserID = Number(username.match(numberPattern)[0]);
+  instantiateTraveler(newUserID);
+}
 
 const instantiateTraveler = async (newUserID) => {
   currentUser = await dataController.getSingleUser(newUserID);
@@ -34,14 +61,23 @@ const instantiateTraveler = async (newUserID) => {
   });
   currentUser = new Traveler(currentUser, currentUsersTrips);
 
-  console.log(currentUser);
-  populateDom(currentUser);
+  populateTravelDashboard(currentUser);
 }
 
-const populateDom = (currentUser) => {
+const populateTravelDashboard = (currentUser) => {
   domUpdates.populateUserWidget(currentUser);
   domUpdates.populateTripsWidgetFilter(currentUser);
   domUpdates.populateTripsList(currentUser);
 }
+
+const populateAgentDashboard = () => {
+  
+}
+
+// Start App
+getAllDestinations();
+
+$('#loginButton').on('click', login);
+$('#userName, #password').on('keyup', domUpdates.validateForm);
 
 export default instantiateTraveler;

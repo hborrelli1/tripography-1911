@@ -1,6 +1,6 @@
 class User {
-  constructor() {
-    
+  constructor(agentType) {
+    this.userType = agentType;
   }
 }
 

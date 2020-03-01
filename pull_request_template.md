@@ -14,9 +14,11 @@
 - [ ] index.html
 - [ ] base.scss
 - [ ] variables.scss
-- [ ] scripts.js
+- [ ] index.js
 - [ ] traveler.js
 - [ ] traveler-test.js
 - [ ] trip.js
 - [ ] trip-test.js
+- [ ] data-controller.js
+- [ ] domUpdates.js
 - [ ] Other files:
