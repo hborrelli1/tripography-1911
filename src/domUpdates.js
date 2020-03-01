@@ -21,7 +21,11 @@ const domUpdates = {
 
     let counter = userInfo.userType === 'traveler'
       ? `<p id="tripCounter">Trip Counter: ${userInfo.myTrips.length}</p>`
-      : `<p id="numberOfTravelersToday">Number of Travelers today: ${userInfo.todaysTravelers}</p>`
+      : `<p id="numberOfTravelersToday">Number of Travelers today: ${userInfo.todaysTravelers}</p>`;
+
+    // let bookTripButton = userInfo.userType === 'traveler'
+    //   ? `<button id="requestTripButton">Request Trip</button>`
+    //   : ``;
 
     let userWidget = `<section class="user-profile-widget widget">
       <h2>User Info</h2>
@@ -36,13 +40,14 @@ const domUpdates = {
 
   populateTripsWidgetFilter(userInfo) {
     let filterButtons = `<div class="trip-filter-bar">
-    <p class="trip-status">Filter By Status:</p>
-    <div class="filter-buttons">
-    <button id="upcomingTrips">Upcoming</button>
-    <button id="pendingTrips">Pending</button>
-    <button id="currentTrips">Current</button>
-    <button id="pastTrips">Past</button>
-    </div>
+        <p class="trip-status">Filter By Status:</p>
+        <div class="filter-buttons">
+        <button id="upcomingTrips">Upcoming</button>
+        <button id="pendingTrips">Pending</button>
+        <button id="currentTrips">Current</button>
+        <button id="pastTrips">Past</button>
+      </div>
+      <button id="requestTripButton">Request Trip</button>
     </div>`;
 
     let tripSearchBar = `<div class="trip-search-bar">

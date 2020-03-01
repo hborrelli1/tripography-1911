@@ -18,6 +18,12 @@
     display:flex;
     align-items: center;
     margin-bottom:30px;
+    position:relative;
+
+    #requestTripButton {
+      position:absolute;
+      right:0px;
+    }
   }
 }
 
