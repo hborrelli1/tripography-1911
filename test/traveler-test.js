@@ -3,6 +3,7 @@ const expect = chai.expect;
 
 import Traveler from '../src/traveler';
 import Trip from '../src/trip';
+import User from '../src/user';
 import travelerData from '../sample-data/traveler-data';
 import tripData from '../sample-data/trip-data';
 
@@ -13,7 +14,7 @@ describe('Traveler Tests', function() {
   describe('Test Traveler properties', function() {
 
     beforeEach(function() {
-      traveler = new Traveler(travelerData.travelers[0]);
+      traveler = new Traveler('traveler', tripData.trips, travelerData.travelers[0]);
     });
 
     it('should be able to instantiate & inherit properties', function() {
@@ -31,7 +32,7 @@ describe('Traveler Tests', function() {
     let trip;
 
     beforeEach(function() {
-      traveler = new Traveler(travelerData.travelers[0], myTrips);
+      traveler = new Traveler('traveler', tripData.trips, travelerData.travelers[0]);
       trip = new Trip(tripData.trips[0]);
       myTrips = {
         "id": 1,
@@ -63,6 +64,7 @@ describe('Traveler Tests', function() {
     });
 
     it('should be able to hold on to their trips', function() {
+      traveler.myTrips = myTrips;
       expect(traveler.myTrips).to.deep.equal({
         "id": 1,
         "userID": 1,
