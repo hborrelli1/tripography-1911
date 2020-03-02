@@ -90,6 +90,7 @@ const populateAgentDashboard = async () => {
 
   agent = new Agent('agent', allTrips);
   console.log(agent);
+  console.log(allTrips);
   agent.getTodaysTravelers(allTrips);
   domUpdates.populateUserWidget(agent);
   domUpdates.populateTripsWidgetFilter(agent)
@@ -99,14 +100,9 @@ const populateAgentDashboard = async () => {
     let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
     return new Trip(trip, tripDestination);
   });
-  // Display
   domUpdates.populateTripsList(agent, pendingTrips);
 }
 
-// Display Make Trip Request modal
-// Select Date, duration, numOfTravelers and destination
-// display estimated cost + agent fee (10%).
-// Update dashboard with new pending trip.
 
 const makeEstimatedCostHTML = (destinationInfo, tripEstimate) => {
   return `<div class="trip-estimate-img" style="background-image:url(${destinationInfo.image})"></div>
@@ -116,23 +112,6 @@ const makeEstimatedCostHTML = (destinationInfo, tripEstimate) => {
     <button id="confirmTripBooking" class="confirm" type="button"><img src="./images/check-mark.png" alt="confirm trip booking">Confirm Booking</button>
   `;
 }
-
-// const bookTrip = () => {
-//   let tripPost = {
-//     "id": Date.now(),
-//     "userID": currentUser.id,
-//     "destinationID": destinationInfo.id,
-//     "travelers": numOfTravelers,
-//     "date": "2019/09/16",
-//     "duration": tripDuration,
-//     "status": "pending",
-//     "suggestedActivities": []
-//   }
-//   console.log('trip to post: ', tripPost);
-//
-//   let bookingResponse = dataController.bookTrip(tripPost);
-//   console.log(bookingResponse);
-// }
 
 const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) => {
   let durationValue = $('#tripDuration').val() != '';

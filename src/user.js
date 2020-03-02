@@ -13,7 +13,7 @@ class User {
 
     let yearlyCost = thisYearsTrips.reduce((totalSpent, trip) => {
       let flightCost = trip.destinationInfo.estimatedFlightCostPerPerson * trip.travelers;
-      let lodgingCost = (trip.destinationInfo.estimatedLodgingCostPerDay * trip.travelers) * trip.duration;
+      let lodgingCost = (trip.destinationInfo.estimatedLodgingCostPerDay * trip.travelers) * (trip.duration);
       let tripTotal = flightCost + lodgingCost;
 
       return totalSpent += tripTotal;
