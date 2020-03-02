@@ -14,11 +14,11 @@ describe('DataController Tests', function() {
   });
 
   it('should be able to instantiate & inherit properties', function() {
-    chai.spy.on(
-      fetch,
-      [method(s) to listen for],
-      [replacement behavior]
-    )
+    // chai.spy.on(
+    //   fetch,
+    //   [method(s) to listen for],
+    //   [replacement behavior]
+    // )
     expect(dataController.getUsersTrips(40).length).to.equal(6);
   });
 

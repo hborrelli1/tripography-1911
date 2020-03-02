@@ -77,7 +77,7 @@ const populateTravelDashboard = async (currentUser, newUserID) => {
 
   domUpdates.populateUserWidget(currentUser);
   domUpdates.populateTripsWidgetFilter(currentUser);
-  domUpdates.populateTripsList(currentUser);
+  domUpdates.populateTripsList(currentUser, currentUser.myTrips);
 }
 
 const populateAgentDashboard = async () => {
@@ -100,7 +100,7 @@ const populateAgentDashboard = async () => {
     return new Trip(trip, tripDestination);
   });
   // Display
-  domUpdates.populatePendingTrips(pendingTrips);
+  domUpdates.populateTripsList(agent, pendingTrips);
 }
 
 // Display Make Trip Request modal
