@@ -5,6 +5,8 @@
 @import './login.scss';
 @import './errors.scss';
 @import './widgets.scss';
+@import './modals.scss';
+@import '~js-datepicker/src/datepicker';
 
 *, *::before, *::after {
   margin:0;
@@ -18,7 +20,7 @@ body {
 
 main {
   display: flex;
-  height:calc(100vh - 238px);
+  height:calc(100vh - 106px);
   flex-flow:wrap;
   justify-content: center;
   align-items: center;

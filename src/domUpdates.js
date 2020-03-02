@@ -2,6 +2,7 @@ import $ from 'jquery';
 import DataController from './data-controller';
 import instantiateTraveler from './index.js';
 let dataController = new DataController();
+import datepicker from 'js-datepicker';
 
 const domUpdates = {
   userType: null,
@@ -47,7 +48,7 @@ const domUpdates = {
         <button id="currentTrips">Current</button>
         <button id="pastTrips">Past</button>
       </div>
-      <button id="requestTripButton">Request Trip</button>
+      <button id="requestTripButton" type="button">Request Trip</button>
     </div>`;
 
     let tripSearchBar = `<div class="trip-search-bar">
@@ -105,6 +106,53 @@ const domUpdates = {
       </li>`;
 
       $('.trip-widget').append(`<ul class="traveler-trip-list">${listOfPendingTrips}</ul>`);
+    });
+  },
+
+  showTripRequestModal(allDestinations) {
+    let locationOptions = '';
+    allDestinations.destinations.forEach(location => {
+      // create an option tag
+      // should include id as value and name as option.
+      return locationOptions += `<option value="${location.id}">${location.destination}</option>`;
+    });
+
+    $('main').append(`
+      <div class="request-trip-modal-bg">
+        <div class="modal" aria-label="tripRequestModal">
+          <h2>New Trip Request Form:</h2>
+          <form id="tripRequestForm" class="request-trip-form" action="" method="">
+            <div class="form-row">
+              <label for="datePicker">Select a start date:</label>
+              <input id="datePicker" type="text" name="datepicker" value="">
+            </div>
+            <div class="form-row">
+              <label for="tripDuration">Trip duration (days):</label>
+              <input id="tripDuration" type="number" name="tripDuration">
+            </div>
+            <div class="form-row">
+              <label for="numTravelers">Number of travelers:</label>
+              <input id="numTravelers" type="number" name="numTravelers">
+            </div>
+            <div class="form-row">
+              <label for="tripDestination">Where would you like to go?</label>
+              <select name="pets" id="tripDestination">
+                <option value="">--Please choose an option--</option>
+                ${locationOptions}
+              </select>
+            </div>
+          </form>
+          <button id="closeModal" aria-control="tripRequestModal"><img src="./images/close-button.png" alt="close-button"></button>
+          <div class="trip-estimate-container"></div>
+        </div>
+      </div>
+    `);
+    let now = Date.now();
+    const picker = datepicker('#datePicker', { minDate: new Date(now) });
+
+
+    $('#closeModal').on('click', function() {
+      $('.request-trip-modal-bg').remove();
     });
   }
 }

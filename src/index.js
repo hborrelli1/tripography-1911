@@ -7,6 +7,7 @@ import './css/base.scss';
 import './images/turing-logo.png'
 import './images/tripography-logo.svg'
 import './images/favicon-32x32.png'
+import './images/close-button.png'
 
 import DataController from './data-controller';
 import User from './user';
@@ -100,10 +101,105 @@ const populateAgentDashboard = async () => {
   domUpdates.populatePendingTrips(pendingTrips);
 }
 
+// Display Make Trip Request modal
+// Select Date, duration, numOfTravelers and destination
+// display estimated cost + agent fee (10%).
+// Update dashboard with new pending trip.
+
+const makeEstimatedCostHTML = (destinationInfo, tripEstimate) => {
+  return `<div class="trip-estimate-img" style="background-image:url(${destinationInfo.image})"></div>
+    <h3>Confirm Trip Booking:</h3>
+    <h2><span>To:</span>${destinationInfo.destination}</h2>
+    <p class="trip-total"><span>Total:</span> ${tripEstimate}</p>
+    <button id="confirmTripBooking" type="button">Confirm Booking</button>
+  `;
+}
+
+// const bookTrip = () => {
+//   let tripPost = {
+//     "id": Date.now(),
+//     "userID": currentUser.id,
+//     "destinationID": destinationInfo.id,
+//     "travelers": numOfTravelers,
+//     "date": "2019/09/16",
+//     "duration": tripDuration,
+//     "status": "pending",
+//     "suggestedActivities": []
+//   }
+//   console.log('trip to post: ', tripPost);
+//
+//   let bookingResponse = dataController.bookTrip(tripPost);
+//   console.log(bookingResponse);
+// }
+
+const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) => {
+  let durationValue = $('#tripDuration').val() != '';
+  let travelersValue = $('#tripDuration').val() != '';
+  let selectValue = $('#tripDestination').val() != '';
+
+  if ( durationValue && travelersValue && selectValue) {
+    $('.trip-estimate-container').empty();
+
+    let destinationID = Number($( "#tripDestination option:selected" ).val());
+    let numOfTravelers = Number($( "#numTravelers" ).val());
+    let tripDuration = Number($( "#tripDuration" ).val());
+
+    let destinationInfo = allDestinations.destinations.find(place => place.id === destinationID);
+    console.log(destinationInfo);
+
+    let flightCost = destinationInfo.estimatedFlightCostPerPerson * numOfTravelers;
+    let lodgingCost = (destinationInfo.estimatedLodgingCostPerDay * numOfTravelers) * tripDuration;
+    let tripTotal = flightCost + lodgingCost;
+    let totalPlusAgentFee = tripTotal + (tripTotal * .10);
+
+    let tripEstimate = totalPlusAgentFee.toLocaleString("en-US", { style: "currency", currency: "USD" });
+
+    let generatedHTML = makeEstimatedCostHTML(destinationInfo, tripEstimate);
+
+    $('.trip-estimate-container').append(`${generatedHTML}`);
+
+    $('#confirmTripBooking').on('click', async function() {
+
+      let tripPost = {
+        "id": Date.now(),
+        "userID": currentUser.id,
+        "destinationID": destinationInfo.id,
+        "travelers": numOfTravelers,
+        "date": "2019/09/16",
+        "duration": tripDuration,
+        "status": "pending",
+        "suggestedActivities": []
+      }
+      console.log('trip to post: ', tripPost);
+
+      let bookingResponse = await dataController.bookTrip(tripPost);
+      console.log(bookingResponse);
+
+      $('#confirmTripBooking').remove();
+      $('.trip-total').append(`<p>${bookingResponse.message}</p>`);
+    })
+  }
+}
+
+const displayTripRequestModal = (currentUser) => {
+  if (event.target.id === 'requestTripButton') {
+    // Loop through all destinations
+    console.log(allDestinations);
+    // create a select input with all destinations
+
+    domUpdates.showTripRequestModal(allDestinations);
+
+    $(document).on("change", "#tripRequestForm input, #tripRequestForm select", function () {
+      calculateEstimatedTotalTripRequest(allDestinations, currentUser);
+    });
+  }
+}
+
 // Start App
 getAllDestinations();
 
 $('#loginButton').on('click', login);
 $('#userName, #password').on('keyup', domUpdates.validateForm);
+$('main').on('click', displayTripRequestModal);
 
 export default instantiateTraveler;
