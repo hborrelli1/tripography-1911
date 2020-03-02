@@ -72,15 +72,15 @@ const domUpdates = {
     console.log(tripsToList);
     let listOfTrips = '';
 
-    let buttonList = userInfo.userType === 'agent'
-      ? `<button id="${trip.id}">Approve Trip</button>`
-      : '';
-
     let tripsToDisplay = userInfo === 'traveler'
       ? userInfo.myTrips
       : tripsToList;
 
     tripsToDisplay.forEach(trip => {
+      let buttonList = userInfo.userType === 'agent'
+        ? `<button id="${trip.id}">Approve Trip</button>`
+        : '';
+
       listOfTrips += `<li class="trip">
         <div class="img-wrap" style="background-image:url('${trip.destinationInfo.image}');"></div>
         <div class="trip-content">
@@ -99,31 +99,9 @@ const domUpdates = {
     $('.trip-widget').append(`<ul class="traveler-trip-list">${listOfTrips}</ul>`);
   },
 
-  // populatePendingTrips(pendingTrips) {
-  //   let listOfPendingTrips = '';
-  //   pendingTrips.forEach(trip => {
-  //     listOfPendingTrips += `<li class="trip">
-  //       <div class="img-wrap" style="background-image:url('${trip.destinationInfo.image}');"></div>
-  //       <div class="trip-content">
-  //         <h4>${trip.destinationInfo.destination}</h4>
-  //         <p>Number of travelers: ${trip.travelers}</p>
-  //         <p>Trip dates: ${trip.date} - ${trip.date + trip.duration}</p>
-  //         <p>Trip length: ${trip.duration}</p>
-  //         <p>Trip status: ${trip.status}</p>
-  //         <p>Suggested activities: ${trip.suggestedActivities}</p>
-  //         <button id="${trip.id}">Approve Trip</button>
-  //       </div>
-  //     </li>`;
-  //
-  //     $('.trip-widget').append(`<ul class="traveler-trip-list">${listOfPendingTrips}</ul>`);
-  //   });
-  // },
-
   showTripRequestModal(allDestinations) {
     let locationOptions = '';
     allDestinations.destinations.forEach(location => {
-      // create an option tag
-      // should include id as value and name as option.
       return locationOptions += `<option value="${location.id}">${location.destination}</option>`;
     });
 
