@@ -5,6 +5,9 @@ class Agent extends User {
   constructor(agentType, allTrips) {
     super(agentType, allTrips);
     this.name = 'Agent Michael Scarn';
+    // spy on user.getTotalAmountSpentThisYear
+    // Test it gets called
+    // Test that it is providing expected output 
     this.totalRevenue = this.getTotalAmountSpentThisYear(allTrips);
     this.todaysTravelers = this.getTodaysTravelers(allTrips);
   }
