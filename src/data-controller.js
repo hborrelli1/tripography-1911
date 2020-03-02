@@ -29,6 +29,18 @@ class DataController {
     return pendingTrips;
   }
 
+  async bookTrip(tripPost) {
+    let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(tripPost)
+    });
+    let tripRequestResponse = await response.json();
+    return tripRequestResponse;
+  }
+
   // calculateTotalRevenue() {
   //   let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
   //   let allTrips = await response.json();
