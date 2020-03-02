@@ -48,7 +48,7 @@ const domUpdates = {
         <button id="currentTrips">Current</button>
         <button id="pastTrips">Past</button>
       </div>
-      <button id="requestTripButton" type="button">Request Trip</button>
+      <button id="requestTripButton" class="confirm" type="button"><img src="./images/plus.png" alt="request a trip">Request Trip</button>
     </div>`;
 
     let tripSearchBar = `<div class="trip-search-bar">
@@ -95,7 +95,7 @@ const domUpdates = {
       listOfPendingTrips += `<li class="trip">
         <div class="img-wrap" style="background-image:url('${trip.destinationInfo.image}');"></div>
         <div class="trip-content">
-          <h3>${trip.destinationInfo.destination}</h3>
+          <h4>${trip.destinationInfo.destination}</h4>
           <p>Number of travelers: ${trip.travelers}</p>
           <p>Trip dates: ${trip.date} - ${trip.date + trip.duration}</p>
           <p>Trip length: ${trip.duration}</p>
@@ -148,10 +148,16 @@ const domUpdates = {
       </div>
     `);
     let now = Date.now();
-    const picker = datepicker('#datePicker', { minDate: new Date(now) });
+    const picker = datepicker('#datePicker', { minDate: new Date(now) }, {
+      formatter: (input, date, instance) => {
+        const value = date.toLocaleDateString()
+        input.value = value // => '1/1/2099'
+      }
+    });
 
 
     $('#closeModal').on('click', function() {
+      $('body').removeClass('js-modal-open');
       $('.request-trip-modal-bg').remove();
     });
   }

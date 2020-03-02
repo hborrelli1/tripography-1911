@@ -1,3 +1,4 @@
+@import './@mixins.scss';
 @import './variables.scss';
 @import './header.scss';
 @import './fonts.scss';
@@ -16,14 +17,17 @@
 
 body {
   background-color: $primary-background;
+
+  &.js-modal-open {
+    height:100vh;
+    overflow-y: hidden;
+  }
 }
 
 main {
-  display: flex;
+  @include flex-center-center;
   height:calc(100vh - 106px);
   flex-flow:wrap;
-  justify-content: center;
-  align-items: center;
 
   .margin-wrapper {
     width:100%;
