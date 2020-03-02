@@ -4,7 +4,7 @@ class DataController {
   }
 
   async getUsersTrips(userID) {
-    let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
+    let response = await window.fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
     let allTrips = await response.json();
     let filteredUserTrips;
     if (userID === undefined) {
@@ -16,21 +16,20 @@ class DataController {
   }
 
   async getSingleUser(userID) {
-    let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers')
-    let allUsers = await response.json();
-    let foundUser = await allUsers.travelers.find(user => user.id === userID);
+    let response = await window.fetch(`https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers/${userID}`)
+    let foundUser = await response.json();
     return foundUser;
   }
 
   async getPendingTrips() {
-    let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
+    let response = await window.fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
     let allTrips = await response.json();
     let pendingTrips = await allTrips.trips.filter(trip => trip.status === 'pending');
     return pendingTrips;
   }
 
   async bookTrip(tripPost) {
-    let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', {
+    let response = await window.fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -42,13 +41,6 @@ class DataController {
     let tripRequestResponse = await response.json();
     return tripRequestResponse;
   }
-
-  // calculateTotalRevenue() {
-  //   let response = await fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
-  //   let allTrips = await response.json();
-  //   let pendingTrips = await allTrips.trips.filter(trip => trip.status === 'pending');
-  //   return pendingTrips;
-  // }
 
 }
 
