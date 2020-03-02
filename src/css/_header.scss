@@ -4,9 +4,7 @@ header {
     text-align: center;
     margin-bottom:0px;
     font-weight:500;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include flex-center-center;
 
     img {
       margin-right:10px;

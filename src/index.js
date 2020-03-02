@@ -4,10 +4,12 @@ var moment = require('moment');
 
 import './css/base.scss';
 
-import './images/turing-logo.png'
-import './images/tripography-logo.svg'
-import './images/favicon-32x32.png'
-import './images/close-button.png'
+import './images/turing-logo.png';
+import './images/tripography-logo.svg';
+import './images/favicon-32x32.png';
+import './images/close-button.png';
+import './images/check-mark.png';
+import './images/plus.png';
 
 import DataController from './data-controller';
 import User from './user';
@@ -108,10 +110,10 @@ const populateAgentDashboard = async () => {
 
 const makeEstimatedCostHTML = (destinationInfo, tripEstimate) => {
   return `<div class="trip-estimate-img" style="background-image:url(${destinationInfo.image})"></div>
-    <h3>Confirm Trip Booking:</h3>
+    <h4>Confirm Trip Booking:</h4>
     <h2><span>To:</span>${destinationInfo.destination}</h2>
     <p class="trip-total"><span>Total:</span> ${tripEstimate}</p>
-    <button id="confirmTripBooking" type="button">Confirm Booking</button>
+    <button id="confirmTripBooking" class="confirm" type="button"><img src="./images/check-mark.png" alt="confirm trip booking">Confirm Booking</button>
   `;
 }
 
@@ -190,6 +192,7 @@ const displayTripRequestModal = (currentUser) => {
     console.log(allDestinations);
     // create a select input with all destinations
 
+    $('body').addClass('js-modal-open');
     domUpdates.showTripRequestModal(allDestinations);
 
     $(document).on("change", "#tripRequestForm input, #tripRequestForm select", function () {
