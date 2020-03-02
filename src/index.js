@@ -140,6 +140,9 @@ const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) =>
   if ( durationValue && travelersValue && selectValue) {
     $('.trip-estimate-container').empty();
 
+    let tripDate = $( "#datePicker" ).val();
+    let formattedDate = moment(tripDate).format('YYYY/MM/DD');
+    console.log(formattedDate);
     let destinationID = Number($( "#tripDestination option:selected" ).val());
     let numOfTravelers = Number($( "#numTravelers" ).val());
     let tripDuration = Number($( "#tripDuration" ).val());
@@ -165,7 +168,7 @@ const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) =>
         "userID": currentUser.id,
         "destinationID": destinationInfo.id,
         "travelers": numOfTravelers,
-        "date": "2019/09/16",
+        "date": formattedDate,
         "duration": tripDuration,
         "status": "pending",
         "suggestedActivities": []

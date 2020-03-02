@@ -148,7 +148,12 @@ const domUpdates = {
       </div>
     `);
     let now = Date.now();
-    const picker = datepicker('#datePicker', { minDate: new Date(now) });
+    const picker = datepicker('#datePicker', { minDate: new Date(now) }, {
+      formatter: (input, date, instance) => {
+        const value = date.toLocaleDateString()
+        input.value = value // => '1/1/2099'
+      }
+    });
 
 
     $('#closeModal').on('click', function() {
