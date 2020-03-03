@@ -50,8 +50,6 @@ const domUpdates = {
       <button id="requestTripButton" class="confirm" type="button"><img src="./images/plus.png" alt="request a trip">Request Trip</button>
     </div>`;
 
-    // let dataList = userInfo.userType === 'traveler'
-    console.log(allUsers);
     let datalist = '';
     allUsers.travelers.forEach(user => {
       datalist += `<option value="${user.name}">`;
@@ -183,7 +181,6 @@ const domUpdates = {
       return new Trip(trip, tripDestination);
     })
 
-    // instantiate Traverler
     searchedUser = new Traveler('agent', usersTrips, searchedUser);
 
     $('.traveler-trip-list').empty();

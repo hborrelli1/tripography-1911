@@ -41,8 +41,8 @@ class DataController {
       },
       body: JSON.stringify(tripPost)
     });
-    // Format rsponse mesage here and error handling.
-    console.log(response.status);
+
+    // Add response handling here.
     let tripRequestResponse = await response.json();
     return tripRequestResponse;
   }

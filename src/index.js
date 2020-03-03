@@ -88,7 +88,6 @@ const populateAgentDashboard = async () => {
     let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
     return new Trip(trip, tripDestination);
   });
-  // Working well to this point.
 
   agent = new Agent('agent', allTrips);
 
@@ -129,34 +128,24 @@ const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) =>
 
     let tripDate = $( "#datePicker" ).val();
     let formattedDate = moment(tripDate).format('YYYY/MM/DD');
-    console.log(formattedDate);
     let destinationID = Number($( "#tripDestination option:selected" ).val());
     let numOfTravelers = Number($( "#numTravelers" ).val());
     let tripDuration = Number($( "#tripDuration" ).val());
 
     let destinationInfo = allDestinations.destinations.find(place => place.id === destinationID);
-    console.log(destinationInfo);
-
     let flightCost = destinationInfo.estimatedFlightCostPerPerson * numOfTravelers;
     let lodgingCost = (destinationInfo.estimatedLodgingCostPerDay * numOfTravelers) * tripDuration;
     let tripTotal = flightCost + lodgingCost;
     let totalPlusAgentFee = tripTotal + (tripTotal * .10);
 
     let tripEstimate = totalPlusAgentFee.toLocaleString("en-US", { style: "currency", currency: "USD" });
-
     let generatedHTML = makeEstimatedCostHTML(destinationInfo, tripEstimate);
 
     $('.trip-estimate-container').append(`${generatedHTML}`);
-
     $('#confirmTripBooking').on('click', async function() {
 
       confirmTripBooking(currentUser, destinationInfo, numOfTravelers, formattedDate, tripDuration);
-
-      // display response message
-      // set timeout
-      // clear out modal, and trips list,
-      // repopulate trips list
-    })
+    });
   }
 }
 
@@ -171,10 +160,8 @@ const confirmTripBooking = async (currentUser, destinationInfo, numOfTravelers, 
     "status": "pending",
     "suggestedActivities": []
   }
-  console.log('trip to post: ', tripPost);
 
   let bookingResponse = await dataController.bookTrip(tripPost);
-  console.log(bookingResponse);
 
   $('#confirmTripBooking').remove();
   $('.trip-total').append(`<p>${bookingResponse.message}</p>`);
@@ -182,8 +169,6 @@ const confirmTripBooking = async (currentUser, destinationInfo, numOfTravelers, 
 
 const displayTripRequestModal = (currentUser) => {
   if (event.target.id === 'requestTripButton') {
-    // Loop through all destinations
-    // create a select input with all destinations
     $('body').addClass('js-modal-open');
     domUpdates.showTripRequestModal(allDestinations);
 
@@ -205,7 +190,6 @@ const approveTripRequest = async (event) => {
 
 const denyTripRequest = (event) => {
   let tripID = Number(event.target.id);
-  console.log(tripID);
   let deletePost = {
      "id": tripID,
   }
@@ -231,17 +215,15 @@ const agentActions = async (event) => {
     await approveTripRequest(event);
 
     let updatedTrips = await regenerateTrips();
-
     await domUpdates.populateTripsList(agent, updatedTrips, allUsers);
-
   }
+
   if (event.target.dataset.status === 'deny' || event.target.dataset.status === 'delete') {
     let allUsers = await dataController.getAllUsers();
     await denyTripRequest(event);
 
     let updatedTrips = await regenerateTrips();
     await domUpdates.populateTripsList(agent, updatedTrips, allUsers);
-
   }
 }
 
@@ -252,7 +234,6 @@ $('#loginButton').on('click', login);
 $('#userName, #password').on('keyup', domUpdates.validateForm);
 $('main').on('click', function(event) {
   displayTripRequestModal();
-
   agentActions(event);
 });
 
