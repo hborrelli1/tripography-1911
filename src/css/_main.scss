@@ -1,0 +1,30 @@
+main {
+  @include flex-center-center;
+  height:calc(100vh - 106px);
+  flex-flow:wrap;
+
+  .margin-wrapper {
+    width:100%;
+    max-width:1200px;
+    margin:0 auto;
+    display:flex;
+    flex-flow:wrap;
+  }
+}
+
+.travel-dashboard {
+  align-items:flex-start;
+  margin-top:50px;
+  padding:0px 50px;
+}
+
+@mixin base--sm() {
+  .travel-dashboard {
+    padding:0px 25px;
+  }
+
+  .user-profile-widget,
+  .trip-widget {
+    width:100%;
+  }
+}

@@ -27,3 +27,12 @@
     }
   }
 }
+
+
+@mixin login--sm() {
+  #loginView {
+    input {
+      font-size:16px;
+    }
+  }
+}
