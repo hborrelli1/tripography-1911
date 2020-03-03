@@ -85,7 +85,7 @@ const domUpdates = {
       : tripsToList;
 
     tripsToDisplay.forEach(trip => {
-      let now = moment();
+      let now = moment().format('YYYY/MM/DD');
       let userName = allUsers.travelers.find(user => user.id === trip.userID).name;
 
       let approveButton = (userInfo.userType === 'agent' && trip.status !== 'approved')
