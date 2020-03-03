@@ -60,15 +60,13 @@
     display:flex;
     align-items:center;
     background-color: #FFF;
-    // background-color: $light-green;
     box-shadow: $box-shadow;
 
     .img-wrap {
       width:40%;
       height:auto;
       min-height:200px;
-      background-size:cover;
-      background-position:center;
+      @include background-cover-center;
       margin-right:20px;
       align-self: stretch;
     }
