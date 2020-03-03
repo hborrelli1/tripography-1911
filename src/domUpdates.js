@@ -1,5 +1,7 @@
 import $ from 'jquery';
 import DataController from './data-controller';
+import Traveler from './traveler';
+import Trip from './trip';
 import instantiateTraveler from './index.js';
 let dataController = new DataController();
 import datepicker from 'js-datepicker';
@@ -24,10 +26,6 @@ const domUpdates = {
       ? `<p id="tripCounter">Trip Counter: ${userInfo.myTrips.length}</p>`
       : `<p id="numberOfTravelersToday">Number of Travelers today: ${userInfo.todaysTravelers}</p>`;
 
-    // let bookTripButton = userInfo.userType === 'traveler'
-    //   ? `<button id="requestTripButton">Request Trip</button>`
-    //   : ``;
-
     let userWidget = `<section class="user-profile-widget widget">
       <h2>User Info</h2>
       <h4 id="userTitle">${userInfo.name}</h4>
@@ -39,7 +37,7 @@ const domUpdates = {
     $('.margin-wrapper').append(userWidget);
   },
 
-  populateTripsWidgetFilter(userInfo) {
+  populateTripsWidgetFilter(userInfo, allUsers) {
     let filterButtons = `<div class="trip-filter-bar">
         <p class="trip-status">Filter By Status:</p>
         <div class="filter-buttons">
@@ -51,10 +49,20 @@ const domUpdates = {
       <button id="requestTripButton" class="confirm" type="button"><img src="./images/plus.png" alt="request a trip">Request Trip</button>
     </div>`;
 
+    // let dataList = userInfo.userType === 'traveler'
+    console.log(allUsers);
+    let datalist = '';
+    allUsers.travelers.forEach(user => {
+      datalist += `<option value="${user.name}">`;
+    });
+
     let tripSearchBar = `<div class="trip-search-bar">
       <label for="search">Search the site:</label>
-      <input type="search" id="search" name="search bar"
+      <input list="search-users-list" type="search" id="search" name="search bar"
        aria-label="Search through travelers">
+      <datalist id="search-users-list">
+        ${datalist}
+      </datalist>
     </div>`;
 
     let tripWidgetHeader = userInfo.userType === 'traveler'
@@ -78,7 +86,7 @@ const domUpdates = {
 
     tripsToDisplay.forEach(trip => {
       let buttonList = userInfo.userType === 'agent'
-        ? `<button id="${trip.id}">Approve Trip</button>`
+        ? `<button id="${trip.id}" class="approve" data-status="approve">Approve Trip</button> <button id="${trip.id}" class="deny" data-status="deny">Deny Trip</button>`
         : '';
 
       listOfTrips += `<li class="trip">
@@ -143,12 +151,36 @@ const domUpdates = {
       }
     });
 
-
     $('#closeModal').on('click', function() {
       $('body').removeClass('js-modal-open');
       $('.request-trip-modal-bg').remove();
     });
+  },
+
+  async searchForUser(allTrips, allUsers, allDestinations) {
+    let searchTerm = $('#search').val().toLowerCase();
+    let searchedUser = allUsers.travelers.find(user => user.name.toLowerCase().includes(searchTerm));
+    console.log(searchedUser);
+
+    let usersTrips = await dataController.getUsersTrips(searchedUser.id);
+    usersTrips = usersTrips.map(trip => {
+      let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+      return new Trip(trip, tripDestination);
+    })
+    console.log(usersTrips);
+
+    // instantiate Traverler
+    searchedUser = new Traveler('traveler', usersTrips, searchedUser);
+    console.log(searchedUser);
+
+    $('.traveler-trip-list').empty();
+    domUpdates.populateTripsList(searchedUser, searchedUser.myTrips)
   }
+
+  // repopulateTripsList(agent, listOfTrips) {
+  //   console.log('repopulate trips list: ', listOfTrips);
+  //   domUpdates.populateTripsList(agent, listOfTrips);
+  // }
 }
 
 export default domUpdates;

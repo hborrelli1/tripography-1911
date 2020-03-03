@@ -82,6 +82,8 @@ const populateTravelDashboard = async (currentUser, newUserID) => {
 
 const populateAgentDashboard = async () => {
   let allTrips = await dataController.getUsersTrips();
+  let allUsers = await dataController.getAllUsers();
+  console.log('upon pull: ', allTrips);
 
   allTrips = allTrips.trips.map(trip => {
     let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
@@ -89,20 +91,25 @@ const populateAgentDashboard = async () => {
   });
 
   agent = new Agent('agent', allTrips);
-  console.log(agent);
-  console.log(allTrips);
+
   agent.getTodaysTravelers(allTrips);
   domUpdates.populateUserWidget(agent);
-  domUpdates.populateTripsWidgetFilter(agent)
+  domUpdates.populateTripsWidgetFilter(agent, allUsers);
 
   let pendingTrips = await dataController.getPendingTrips();
   pendingTrips = pendingTrips.map(trip => {
     let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
     return new Trip(trip, tripDestination);
   });
-  domUpdates.populateTripsList(agent, pendingTrips);
-}
 
+  domUpdates.populateTripsList(agent, pendingTrips);
+
+  $('#search').on('change', async function() {
+    console.log('alldest: ', allDestinations);
+    let allUsers = await dataController.getAllUsers();
+    domUpdates.searchForUser(allTrips, allUsers, allDestinations);
+  });
+}
 
 const makeEstimatedCostHTML = (destinationInfo, tripEstimate) => {
   return `<div class="trip-estimate-img" style="background-image:url(${destinationInfo.image})"></div>
@@ -180,11 +187,60 @@ const displayTripRequestModal = (currentUser) => {
   }
 }
 
+const approveTripRequest = (event) => {
+  let tripID = Number(event.target.id);
+  let approvePost = {
+     "id": tripID,
+     "status": "approved"
+  }
+
+  dataController.approveTrip(approvePost);
+}
+
+const denyTripRequest = (event) => {
+  let tripID = Number(event.target.id);
+  console.log(tripID);
+  let deletePost = {
+     "id": tripID,
+  }
+
+  dataController.denyTrip(deletePost);
+}
+//
+const agentActions = async (event) => {
+  if (event.target.dataset.status === 'approve') {
+    await approveTripRequest(event);
+    // repopulate dom
+    // Refetch all trips, store to variable
+    // remove trips on agent dashboard
+    // repopulate trips.
+    // let updatedTrips = await dataController.getPendingTrips();
+    // console.log('updatedTrips: ', updatedTrips);
+    //
+    // updatedTrips = await updatedTrips.map(trip => {
+    //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID);
+    //   return new Trip(trip, tripDestination);
+    // });
+    //
+    // await domUpdates.populateTripsList('agent', updatedTrips);
+    // populateTripsList();
+  }
+  if (event.target.dataset.status === 'deny') {
+    await denyTripRequest(event);
+    // repopulate dom
+  }
+}
+
 // Start App
 getAllDestinations();
+console.log(allDestinations);
 
 $('#loginButton').on('click', login);
 $('#userName, #password').on('keyup', domUpdates.validateForm);
-$('main').on('click', displayTripRequestModal);
+$('main').on('click', function(event) {
+  displayTripRequestModal();
+
+  agentActions(event);
+});
 
 export default instantiateTraveler;
