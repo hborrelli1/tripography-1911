@@ -49,7 +49,6 @@ const login = () => {
 }
 
 const invokeAgentAccount = () => {
-  console.log('agency');
   populateAgentDashboard();
 }
 
@@ -83,12 +82,12 @@ const populateTravelDashboard = async (currentUser, newUserID) => {
 const populateAgentDashboard = async () => {
   let allTrips = await dataController.getUsersTrips();
   let allUsers = await dataController.getAllUsers();
-  console.log('upon pull: ', allTrips);
 
   allTrips = allTrips.trips.map(trip => {
     let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
     return new Trip(trip, tripDestination);
   });
+  // Working well to this point.
 
   agent = new Agent('agent', allTrips);
 

@@ -19,12 +19,12 @@ const domUpdates = {
 
   populateUserWidget(userInfo) {
     let money = userInfo.userType === 'traveler'
-      ? `<p id="totalSpent">Total spent this year: ${userInfo.totalSpent}</p>`
-      : `<p id="totalRevenue">Total revenue this year: ${userInfo.totalRevenue}</p>`;
+      ? `<p id="totalSpent">Total spent this year: <span>${userInfo.totalSpent}</span></p>`
+      : `<p id="totalRevenue">Total revenue this year: <span>${userInfo.totalRevenue}</span></p>`;
 
     let counter = userInfo.userType === 'traveler'
-      ? `<p id="tripCounter">Trip Counter: ${userInfo.myTrips.length}</p>`
-      : `<p id="numberOfTravelersToday">Number of Travelers today: ${userInfo.todaysTravelers}</p>`;
+      ? `<p id="tripCounter">Trip Counter: <span>${userInfo.myTrips.length}</span></p>`
+      : `<p id="numberOfTravelersToday">Number of Travelers today: <span>${userInfo.todaysTravelers}</span></p>`;
 
     let userWidget = `<section class="user-profile-widget widget">
       <h2>User Info</h2>
@@ -86,7 +86,7 @@ const domUpdates = {
 
     tripsToDisplay.forEach(trip => {
       let buttonList = userInfo.userType === 'agent'
-        ? `<button id="${trip.id}" class="approve" data-status="approve">Approve Trip</button> <button id="${trip.id}" class="deny" data-status="deny">Deny Trip</button>`
+        ? `<div class="button-block"><button id="${trip.id}" class="approve" data-status="approve">Approve Trip</button> <button id="${trip.id}" class="deny" data-status="deny">Deny Trip</button></div>`
         : '';
 
       listOfTrips += `<li class="trip">

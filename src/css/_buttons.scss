@@ -39,11 +39,19 @@ button.confirm {
   }
 }
 
+button.approve,
+button.deny {
+  padding:5px 10px;
+  color:#fff;
+  font-size:16px;
+  letter-spacing:1px;
+}
+
 button.approve {
-  background-color: $light-green;
+  background-color: $green;
 }
 
 button.deny {
-  background-color: red;
-  padding:5px 10px;
+  background-color: $redish-orange;
+
 }
