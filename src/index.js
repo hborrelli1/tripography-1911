@@ -73,9 +73,10 @@ const instantiateTraveler = async (newUserID) => {
 
 const populateTravelDashboard = async (currentUser, newUserID) => {
   currentUsersTrips = await dataController.getUsersTrips(newUserID);
+  let allUsers = await dataController.getAllUsers();
 
   domUpdates.populateUserWidget(currentUser);
-  domUpdates.populateTripsWidgetFilter(currentUser);
+  domUpdates.populateTripsWidgetFilter(currentUser, allUsers);
   domUpdates.populateTripsList(currentUser, currentUser.myTrips);
 }
 
