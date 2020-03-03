@@ -75,4 +75,37 @@ describe('DataController Tests', function() {
     });
   });
 
+  it('should be able to approve a trip', function() {
+    dataController.approveTrip(tripPost);
+
+    expect(window.fetch).to.be.called(1);
+    expect(window.fetch).to.be.called.with('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/updateTrip', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(tripPost)
+    });
+  });
+
+  it('should be able to deny or delete a trip', function() {
+    dataController.denyTrip(tripPost);
+
+    expect(window.fetch).to.be.called(1);
+    expect(window.fetch).to.be.called.with('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', {
+      method: 'DELETE',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(tripPost)
+    });
+  });
+
+  it('should be able to get all users', function() {
+    dataController.getAllUsers();
+
+    expect(window.fetch).to.be.called(1);
+    expect(window.fetch).to.be.called.with('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers');
+  });
+
 });
