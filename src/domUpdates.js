@@ -77,7 +77,7 @@ const domUpdates = {
     $('.margin-wrapper').append(tripWidget);
   },
 
-  populateTripsList(userInfo, tripsToList) {
+  populateTripsList(userInfo, tripsToList, allUsers) {
     console.log(tripsToList);
     let listOfTrips = '';
 
@@ -87,6 +87,9 @@ const domUpdates = {
 
     tripsToDisplay.forEach(trip => {
       let now = moment();
+      let userName = allUsers.travelers.find(user => user.id === trip.userID).name;
+      console.log(userName);
+      console.log('info insided trip loop: ', allUsers);
 
       let approveButton = (userInfo.userType === 'agent' && trip.status !== 'approved')
         ? `<button id="${trip.id}" class="approve" data-status="approve">Approve Trip</button>`
@@ -96,7 +99,7 @@ const domUpdates = {
         ? `<button id="${trip.id}" class="deny" data-status="deny">Deny Trip</button>`
         : '';
 
-      let deleteButton = ((userInfo.userType === 'agent') && (moment(now).isBefore(trip.date)) && (trip.status === 'approved'))
+      let deleteButton = ((moment(now).isBefore(trip.date)) && (trip.status === 'approved'))
         ? `<button id="${trip.id}" class="delete" data-status="delete">Delete Trip</button>`
         : '';
 
@@ -109,13 +112,13 @@ const domUpdates = {
         <div class="img-wrap" style="background-image:url('${trip.destinationInfo.image}');"></div>
         <div class="trip-content">
           <h3>${trip.destinationInfo.destination}</h3>
+          <p>Reservation: ${userName}</p>
           <p>Number of travelers: ${trip.travelers}</p>
-          <p>Trip dates: ${trip.date} - ${trip.date + trip.duration}</p>
+          <p>Trip dates: ${trip.date} - ${moment(trip.date).add(trip.duration, 'days').format('YYYY/MM/DD')}</p>
           <p>Trip length: ${trip.duration}</p>
           <p>Trip status: ${trip.status}</p>
           <p>Suggested activities: ${trip.suggestedActivities}</p>
           ${buttonList}
-          <!-- Add conditional logic for approve buttons to reuse function. -->
         </div>
       </li>`;
     });
@@ -190,7 +193,7 @@ const domUpdates = {
     console.log(searchedUser);
 
     $('.traveler-trip-list').empty();
-    domUpdates.populateTripsList(searchedUser, searchedUser.myTrips)
+    domUpdates.populateTripsList(searchedUser, searchedUser.myTrips, allUsers)
   }
 
   // repopulateTripsList(agent, listOfTrips) {

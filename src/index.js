@@ -77,7 +77,7 @@ const populateTravelDashboard = async (currentUser, newUserID) => {
 
   domUpdates.populateUserWidget(currentUser);
   domUpdates.populateTripsWidgetFilter(currentUser, allUsers);
-  domUpdates.populateTripsList(currentUser, currentUser.myTrips);
+  domUpdates.populateTripsList(currentUser, currentUser.myTrips, allUsers);
 }
 
 const populateAgentDashboard = async () => {
@@ -102,10 +102,9 @@ const populateAgentDashboard = async () => {
     return new Trip(trip, tripDestination);
   });
 
-  domUpdates.populateTripsList(agent, pendingTrips);
+  domUpdates.populateTripsList(agent, pendingTrips, allUsers);
 
   $('#search').on('change', async function() {
-    console.log('alldest: ', allDestinations);
     let allUsers = await dataController.getAllUsers();
     domUpdates.searchForUser(allTrips, allUsers, allDestinations);
   });
@@ -175,9 +174,7 @@ const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) =>
 const displayTripRequestModal = (currentUser) => {
   if (event.target.id === 'requestTripButton') {
     // Loop through all destinations
-    console.log(allDestinations);
     // create a select input with all destinations
-
     $('body').addClass('js-modal-open');
     domUpdates.showTripRequestModal(allDestinations);
 
@@ -187,14 +184,14 @@ const displayTripRequestModal = (currentUser) => {
   }
 }
 
-const approveTripRequest = (event) => {
+const approveTripRequest = async (event) => {
   let tripID = Number(event.target.id);
   let approvePost = {
      "id": tripID,
      "status": "approved"
   }
 
-  dataController.approveTrip(approvePost);
+  await dataController.approveTrip(approvePost);
 }
 
 const denyTripRequest = (event) => {
@@ -206,34 +203,39 @@ const denyTripRequest = (event) => {
 
   dataController.denyTrip(deletePost);
 }
-//
+
+const regenerateTrips = async () => {
+  $('.traveler-trip-list').empty();
+
+  let allTrips = await dataController.getUsersTrips();
+  let allUsers = await dataController.getAllUsers();
+
+  return allTrips = allTrips.trips.map(trip => {
+    let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+    return new Trip(trip, tripDestination);
+  });
+}
+
 const agentActions = async (event) => {
   if (event.target.dataset.status === 'approve') {
     await approveTripRequest(event);
-    // repopulate dom
-    // Refetch all trips, store to variable
-    // remove trips on agent dashboard
-    // repopulate trips.
-    // let updatedTrips = await dataController.getPendingTrips();
-    // console.log('updatedTrips: ', updatedTrips);
-    //
-    // updatedTrips = await updatedTrips.map(trip => {
-    //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID);
-    //   return new Trip(trip, tripDestination);
-    // });
-    //
-    // await domUpdates.populateTripsList('agent', updatedTrips);
-    // populateTripsList();
+
+    let updatedTrips = await regenerateTrips();
+
+    await domUpdates.populateTripsList(agent, updatedTrips, allUsers);
+
   }
-  if (event.target.dataset.status === 'deny') {
+  if (event.target.dataset.status === 'deny' || event.target.dataset.status === 'delete') {
     await denyTripRequest(event);
-    // repopulate dom
+
+    let updatedTrips = await regenerateTrips();
+    await domUpdates.populateTripsList(agent, updatedTrips, allUsers);
+
   }
 }
 
 // Start App
 getAllDestinations();
-console.log(allDestinations);
 
 $('#loginButton').on('click', login);
 $('#userName, #password').on('keyup', domUpdates.validateForm);
