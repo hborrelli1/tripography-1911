@@ -60,6 +60,7 @@ const invokeTravelerAccount = (username) => {
 
 const instantiateTraveler = async (newUserID) => {
   currentUser = await dataController.getSingleUser(newUserID);
+
   currentUsersTrips = await dataController.getUsersTrips(newUserID);
 
   currentUsersTrips = currentUsersTrips.map(trip => {
@@ -81,13 +82,15 @@ const populateTravelDashboard = async (currentUser, newUserID) => {
 }
 
 const populateAgentDashboard = async () => {
-  let allTrips = await dataController.getUsersTrips();
   let allUsers = await dataController.getAllUsers();
 
-  allTrips = allTrips.trips.map(trip => {
-    let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
-    return new Trip(trip, tripDestination);
-  });
+  // let allTrips = await dataController.getUsersTrips();
+  // allTrips = allTrips.trips.map(trip => {
+  //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+  //   return new Trip(trip, tripDestination);
+  // });
+
+  let allTrips = await instantiateTrips();
 
   agent = new Agent('agent', allTrips);
 
@@ -96,10 +99,13 @@ const populateAgentDashboard = async () => {
   domUpdates.populateTripsWidgetFilter(agent, allUsers);
 
   let pendingTrips = await dataController.getPendingTrips();
-  pendingTrips = pendingTrips.map(trip => {
-    let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
-    return new Trip(trip, tripDestination);
-  });
+
+  pendingTrips = await instantiateTrips(pendingTrips);
+
+  // pendingTrips = pendingTrips.map(trip => {
+    //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+    //   return new Trip(trip, tripDestination);
+    // });
 
   domUpdates.populateTripsList(agent, pendingTrips, allUsers);
 
@@ -200,13 +206,16 @@ const denyTripRequest = (event) => {
 const regenerateTrips = async () => {
   $('.traveler-trip-list').empty();
 
-  let allTrips = await dataController.getUsersTrips();
   let allUsers = await dataController.getAllUsers();
 
-  return allTrips = allTrips.trips.map(trip => {
-    let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
-    return new Trip(trip, tripDestination);
-  });
+  return instantiateTrips();
+
+  // let allTrips = await dataController.getUsersTrips();
+  //
+  // return allTrips = allTrips.trips.map(trip => {
+  //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+  //   return new Trip(trip, tripDestination);
+  // });
 }
 
 const agentActions = async (event) => {
@@ -224,6 +233,22 @@ const agentActions = async (event) => {
 
     let updatedTrips = await regenerateTrips();
     await domUpdates.populateTripsList(agent, updatedTrips, allUsers);
+  }
+}
+
+const instantiateTrips = async (tripsToInstantiate) => {
+  if (!tripsToInstantiate) {
+    let allTrips = await dataController.getUsersTrips();
+    return allTrips = allTrips.trips.map(trip => {
+      let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+      return new Trip(trip, tripDestination);
+    });
+
+  } else {
+    return tripsToInstantiate.map(trip => {
+      let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+      return new Trip(trip, tripDestination);
+    });
   }
 }
 
