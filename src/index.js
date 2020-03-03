@@ -150,25 +150,34 @@ const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) =>
 
     $('#confirmTripBooking').on('click', async function() {
 
-      let tripPost = {
-        "id": Date.now(),
-        "userID": currentUser.id,
-        "destinationID": destinationInfo.id,
-        "travelers": numOfTravelers,
-        "date": formattedDate,
-        "duration": tripDuration,
-        "status": "pending",
-        "suggestedActivities": []
-      }
-      console.log('trip to post: ', tripPost);
+      confirmTripBooking(currentUser, destinationInfo, numOfTravelers, formattedDate, tripDuration);
 
-      let bookingResponse = await dataController.bookTrip(tripPost);
-      console.log(bookingResponse);
-
-      $('#confirmTripBooking').remove();
-      $('.trip-total').append(`<p>${bookingResponse.message}</p>`);
+      // display response message
+      // set timeout
+      // clear out modal, and trips list,
+      // repopulate trips list
     })
   }
+}
+
+const confirmTripBooking = async (currentUser, destinationInfo, numOfTravelers, formattedDate, tripDuration) => {
+  let tripPost = {
+    "id": Date.now(),
+    "userID": currentUser.id,
+    "destinationID": destinationInfo.id,
+    "travelers": numOfTravelers,
+    "date": formattedDate,
+    "duration": tripDuration,
+    "status": "pending",
+    "suggestedActivities": []
+  }
+  console.log('trip to post: ', tripPost);
+
+  let bookingResponse = await dataController.bookTrip(tripPost);
+  console.log(bookingResponse);
+
+  $('#confirmTripBooking').remove();
+  $('.trip-total').append(`<p>${bookingResponse.message}</p>`);
 }
 
 const displayTripRequestModal = (currentUser) => {
@@ -218,6 +227,7 @@ const regenerateTrips = async () => {
 
 const agentActions = async (event) => {
   if (event.target.dataset.status === 'approve') {
+    let allUsers = await dataController.getAllUsers();
     await approveTripRequest(event);
 
     let updatedTrips = await regenerateTrips();
@@ -226,6 +236,7 @@ const agentActions = async (event) => {
 
   }
   if (event.target.dataset.status === 'deny' || event.target.dataset.status === 'delete') {
+    let allUsers = await dataController.getAllUsers();
     await denyTripRequest(event);
 
     let updatedTrips = await regenerateTrips();

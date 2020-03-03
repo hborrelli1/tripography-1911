@@ -78,7 +78,6 @@ const domUpdates = {
   },
 
   populateTripsList(userInfo, tripsToList, allUsers) {
-    console.log(tripsToList);
     let listOfTrips = '';
 
     let tripsToDisplay = userInfo === 'traveler'
@@ -88,8 +87,6 @@ const domUpdates = {
     tripsToDisplay.forEach(trip => {
       let now = moment();
       let userName = allUsers.travelers.find(user => user.id === trip.userID).name;
-      console.log(userName);
-      console.log('info insided trip loop: ', allUsers);
 
       let approveButton = (userInfo.userType === 'agent' && trip.status !== 'approved')
         ? `<button id="${trip.id}" class="approve" data-status="approve">Approve Trip</button>`
@@ -179,27 +176,19 @@ const domUpdates = {
   async searchForUser(allTrips, allUsers, allDestinations) {
     let searchTerm = $('#search').val().toLowerCase();
     let searchedUser = allUsers.travelers.find(user => user.name.toLowerCase().includes(searchTerm));
-    console.log(searchedUser);
 
     let usersTrips = await dataController.getUsersTrips(searchedUser.id);
     usersTrips = usersTrips.map(trip => {
       let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
       return new Trip(trip, tripDestination);
     })
-    console.log(usersTrips);
 
     // instantiate Traverler
     searchedUser = new Traveler('agent', usersTrips, searchedUser);
-    console.log(searchedUser);
 
     $('.traveler-trip-list').empty();
     domUpdates.populateTripsList(searchedUser, searchedUser.myTrips, allUsers)
   }
-
-  // repopulateTripsList(agent, listOfTrips) {
-  //   console.log('repopulate trips list: ', listOfTrips);
-  //   domUpdates.populateTripsList(agent, listOfTrips);
-  // }
 }
 
 export default domUpdates;
