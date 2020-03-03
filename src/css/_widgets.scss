@@ -10,6 +10,11 @@
   width:25%;
   margin-right:5%;
 
+  h4 {
+    font-size: 24px;
+    border-bottom: 2px solid #000;
+  }
+
   p {
     display:flex;
     flex-flow:column;
@@ -55,15 +60,13 @@
     display:flex;
     align-items:center;
     background-color: #FFF;
-    // background-color: $light-green;
     box-shadow: $box-shadow;
 
     .img-wrap {
       width:40%;
       height:auto;
       min-height:200px;
-      background-size:cover;
-      background-position:center;
+      @include background-cover-center;
       margin-right:20px;
       align-self: stretch;
     }
@@ -85,6 +88,43 @@
       button {
         margin-right:10px;
       }
+    }
+  }
+}
+
+@mixin user-widget--sm() {
+  .user-profile-widget {
+    margin-right:0px;
+    margin-bottom:30px;
+  }
+
+  .trip-widget {
+    .trip-filter-bar {
+      display: block;
+      text-align: center;
+
+      #requestTripButton {
+        margin: 20px auto;
+        position:relative;
+        right:unset;
+      }
+    }
+  }
+
+  .traveler-trip-list .trip {
+    flex-flow:wrap;
+
+    .img-wrap,
+    .trip-content {
+      width:100%;
+    }
+
+    .img-wrap {
+      margin-right:0px;
+    }
+
+    .trip-content {
+      padding:30px 20px;
     }
   }
 }

@@ -60,6 +60,7 @@ const invokeTravelerAccount = (username) => {
 
 const instantiateTraveler = async (newUserID) => {
   currentUser = await dataController.getSingleUser(newUserID);
+
   currentUsersTrips = await dataController.getUsersTrips(newUserID);
 
   currentUsersTrips = currentUsersTrips.map(trip => {
@@ -73,21 +74,23 @@ const instantiateTraveler = async (newUserID) => {
 
 const populateTravelDashboard = async (currentUser, newUserID) => {
   currentUsersTrips = await dataController.getUsersTrips(newUserID);
+  let allUsers = await dataController.getAllUsers();
 
   domUpdates.populateUserWidget(currentUser);
-  domUpdates.populateTripsWidgetFilter(currentUser);
-  domUpdates.populateTripsList(currentUser, currentUser.myTrips);
+  domUpdates.populateTripsWidgetFilter(currentUser, allUsers);
+  domUpdates.populateTripsList(currentUser, currentUser.myTrips, allUsers);
 }
 
 const populateAgentDashboard = async () => {
-  let allTrips = await dataController.getUsersTrips();
   let allUsers = await dataController.getAllUsers();
 
-  allTrips = allTrips.trips.map(trip => {
-    let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
-    return new Trip(trip, tripDestination);
-  });
-  // Working well to this point.
+  // let allTrips = await dataController.getUsersTrips();
+  // allTrips = allTrips.trips.map(trip => {
+  //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+  //   return new Trip(trip, tripDestination);
+  // });
+
+  let allTrips = await instantiateTrips();
 
   agent = new Agent('agent', allTrips);
 
@@ -96,15 +99,17 @@ const populateAgentDashboard = async () => {
   domUpdates.populateTripsWidgetFilter(agent, allUsers);
 
   let pendingTrips = await dataController.getPendingTrips();
-  pendingTrips = pendingTrips.map(trip => {
-    let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
-    return new Trip(trip, tripDestination);
-  });
 
-  domUpdates.populateTripsList(agent, pendingTrips);
+  pendingTrips = await instantiateTrips(pendingTrips);
+
+  // pendingTrips = pendingTrips.map(trip => {
+    //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+    //   return new Trip(trip, tripDestination);
+    // });
+
+  domUpdates.populateTripsList(agent, pendingTrips, allUsers);
 
   $('#search').on('change', async function() {
-    console.log('alldest: ', allDestinations);
     let allUsers = await dataController.getAllUsers();
     domUpdates.searchForUser(allTrips, allUsers, allDestinations);
   });
@@ -129,54 +134,47 @@ const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) =>
 
     let tripDate = $( "#datePicker" ).val();
     let formattedDate = moment(tripDate).format('YYYY/MM/DD');
-    console.log(formattedDate);
     let destinationID = Number($( "#tripDestination option:selected" ).val());
     let numOfTravelers = Number($( "#numTravelers" ).val());
     let tripDuration = Number($( "#tripDuration" ).val());
 
     let destinationInfo = allDestinations.destinations.find(place => place.id === destinationID);
-    console.log(destinationInfo);
-
     let flightCost = destinationInfo.estimatedFlightCostPerPerson * numOfTravelers;
     let lodgingCost = (destinationInfo.estimatedLodgingCostPerDay * numOfTravelers) * tripDuration;
     let tripTotal = flightCost + lodgingCost;
     let totalPlusAgentFee = tripTotal + (tripTotal * .10);
 
     let tripEstimate = totalPlusAgentFee.toLocaleString("en-US", { style: "currency", currency: "USD" });
-
     let generatedHTML = makeEstimatedCostHTML(destinationInfo, tripEstimate);
 
     $('.trip-estimate-container').append(`${generatedHTML}`);
-
     $('#confirmTripBooking').on('click', async function() {
 
-      let tripPost = {
-        "id": Date.now(),
-        "userID": currentUser.id,
-        "destinationID": destinationInfo.id,
-        "travelers": numOfTravelers,
-        "date": formattedDate,
-        "duration": tripDuration,
-        "status": "pending",
-        "suggestedActivities": []
-      }
-      console.log('trip to post: ', tripPost);
-
-      let bookingResponse = await dataController.bookTrip(tripPost);
-      console.log(bookingResponse);
-
-      $('#confirmTripBooking').remove();
-      $('.trip-total').append(`<p>${bookingResponse.message}</p>`);
-    })
+      confirmTripBooking(currentUser, destinationInfo, numOfTravelers, formattedDate, tripDuration);
+    });
   }
+}
+
+const confirmTripBooking = async (currentUser, destinationInfo, numOfTravelers, formattedDate, tripDuration) => {
+  let tripPost = {
+    "id": Date.now(),
+    "userID": currentUser.id,
+    "destinationID": destinationInfo.id,
+    "travelers": numOfTravelers,
+    "date": formattedDate,
+    "duration": tripDuration,
+    "status": "pending",
+    "suggestedActivities": []
+  }
+
+  let bookingResponse = await dataController.bookTrip(tripPost);
+
+  $('#confirmTripBooking').remove();
+  $('.trip-total').append(`<p>${bookingResponse.message}</p>`);
 }
 
 const displayTripRequestModal = (currentUser) => {
   if (event.target.id === 'requestTripButton') {
-    // Loop through all destinations
-    console.log(allDestinations);
-    // create a select input with all destinations
-
     $('body').addClass('js-modal-open');
     domUpdates.showTripRequestModal(allDestinations);
 
@@ -186,59 +184,81 @@ const displayTripRequestModal = (currentUser) => {
   }
 }
 
-const approveTripRequest = (event) => {
+const approveTripRequest = async (event) => {
   let tripID = Number(event.target.id);
   let approvePost = {
      "id": tripID,
      "status": "approved"
   }
 
-  dataController.approveTrip(approvePost);
+  await dataController.approveTrip(approvePost);
 }
 
 const denyTripRequest = (event) => {
   let tripID = Number(event.target.id);
-  console.log(tripID);
   let deletePost = {
      "id": tripID,
   }
 
   dataController.denyTrip(deletePost);
 }
-//
+
+const regenerateTrips = async () => {
+  $('.traveler-trip-list').empty();
+
+  let allUsers = await dataController.getAllUsers();
+
+  return instantiateTrips();
+
+  // let allTrips = await dataController.getUsersTrips();
+  //
+  // return allTrips = allTrips.trips.map(trip => {
+  //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+  //   return new Trip(trip, tripDestination);
+  // });
+}
+
 const agentActions = async (event) => {
   if (event.target.dataset.status === 'approve') {
+    let allUsers = await dataController.getAllUsers();
     await approveTripRequest(event);
-    // repopulate dom
-    // Refetch all trips, store to variable
-    // remove trips on agent dashboard
-    // repopulate trips.
-    // let updatedTrips = await dataController.getPendingTrips();
-    // console.log('updatedTrips: ', updatedTrips);
-    //
-    // updatedTrips = await updatedTrips.map(trip => {
-    //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID);
-    //   return new Trip(trip, tripDestination);
-    // });
-    //
-    // await domUpdates.populateTripsList('agent', updatedTrips);
-    // populateTripsList();
+
+    let updatedTrips = await regenerateTrips();
+    await domUpdates.populateTripsList(agent, updatedTrips, allUsers);
   }
-  if (event.target.dataset.status === 'deny') {
+
+  if (event.target.dataset.status === 'deny' || event.target.dataset.status === 'delete') {
+    let allUsers = await dataController.getAllUsers();
     await denyTripRequest(event);
-    // repopulate dom
+
+    let updatedTrips = await regenerateTrips();
+    await domUpdates.populateTripsList(agent, updatedTrips, allUsers);
+  }
+}
+
+const instantiateTrips = async (tripsToInstantiate) => {
+  if (!tripsToInstantiate) {
+    let allTrips = await dataController.getUsersTrips();
+    return allTrips = allTrips.trips.map(trip => {
+      let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+      return new Trip(trip, tripDestination);
+    });
+
+  } else {
+    return tripsToInstantiate.map(trip => {
+      let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
+      return new Trip(trip, tripDestination);
+    });
   }
 }
 
 // Start App
 getAllDestinations();
-console.log(allDestinations);
 
 $('#loginButton').on('click', login);
 $('#userName, #password').on('keyup', domUpdates.validateForm);
 $('main').on('click', function(event) {
   displayTripRequestModal();
-
   agentActions(event);
 });
 

@@ -5,6 +5,7 @@ import Trip from './trip';
 import instantiateTraveler from './index.js';
 let dataController = new DataController();
 import datepicker from 'js-datepicker';
+var moment = require('moment');
 
 const domUpdates = {
   userType: null,
@@ -49,8 +50,6 @@ const domUpdates = {
       <button id="requestTripButton" class="confirm" type="button"><img src="./images/plus.png" alt="request a trip">Request Trip</button>
     </div>`;
 
-    // let dataList = userInfo.userType === 'traveler'
-    console.log(allUsers);
     let datalist = '';
     allUsers.travelers.forEach(user => {
       datalist += `<option value="${user.name}">`;
@@ -76,8 +75,7 @@ const domUpdates = {
     $('.margin-wrapper').append(tripWidget);
   },
 
-  populateTripsList(userInfo, tripsToList) {
-    console.log(tripsToList);
+  populateTripsList(userInfo, tripsToList, allUsers) {
     let listOfTrips = '';
 
     let tripsToDisplay = userInfo === 'traveler'
@@ -85,21 +83,37 @@ const domUpdates = {
       : tripsToList;
 
     tripsToDisplay.forEach(trip => {
+      let now = moment().format('YYYY/MM/DD');
+      let userName = allUsers.travelers.find(user => user.id === trip.userID).name;
+
+      let approveButton = (userInfo.userType === 'agent' && trip.status !== 'approved')
+        ? `<button id="${trip.id}" class="approve" data-status="approve">Approve Trip</button>`
+        : '';
+
+      let denyButton = ((userInfo.userType === 'agent') && (trip.status === 'pending'))
+        ? `<button id="${trip.id}" class="deny" data-status="deny">Deny Trip</button>`
+        : '';
+
+      let deleteButton = ((moment(now).isBefore(trip.date)) && (trip.status === 'approved'))
+        ? `<button id="${trip.id}" class="delete" data-status="delete">Delete Trip</button>`
+        : '';
+
+
       let buttonList = userInfo.userType === 'agent'
-        ? `<div class="button-block"><button id="${trip.id}" class="approve" data-status="approve">Approve Trip</button> <button id="${trip.id}" class="deny" data-status="deny">Deny Trip</button></div>`
+        ? `<div class="button-block">${approveButton}${denyButton}${deleteButton}</div>`
         : '';
 
       listOfTrips += `<li class="trip">
         <div class="img-wrap" style="background-image:url('${trip.destinationInfo.image}');"></div>
         <div class="trip-content">
           <h3>${trip.destinationInfo.destination}</h3>
+          <p>Reservation: ${userName}</p>
           <p>Number of travelers: ${trip.travelers}</p>
-          <p>Trip dates: ${trip.date} - ${trip.date + trip.duration}</p>
+          <p>Trip dates: ${trip.date} - ${moment(trip.date).add(trip.duration, 'days').format('YYYY/MM/DD')}</p>
           <p>Trip length: ${trip.duration}</p>
           <p>Trip status: ${trip.status}</p>
           <p>Suggested activities: ${trip.suggestedActivities}</p>
           ${buttonList}
-          <!-- Add conditional logic for approve buttons to reuse function. -->
         </div>
       </li>`;
     });
@@ -160,27 +174,18 @@ const domUpdates = {
   async searchForUser(allTrips, allUsers, allDestinations) {
     let searchTerm = $('#search').val().toLowerCase();
     let searchedUser = allUsers.travelers.find(user => user.name.toLowerCase().includes(searchTerm));
-    console.log(searchedUser);
 
     let usersTrips = await dataController.getUsersTrips(searchedUser.id);
     usersTrips = usersTrips.map(trip => {
       let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
       return new Trip(trip, tripDestination);
     })
-    console.log(usersTrips);
 
-    // instantiate Traverler
-    searchedUser = new Traveler('traveler', usersTrips, searchedUser);
-    console.log(searchedUser);
+    searchedUser = new Traveler('agent', usersTrips, searchedUser);
 
     $('.traveler-trip-list').empty();
-    domUpdates.populateTripsList(searchedUser, searchedUser.myTrips)
+    domUpdates.populateTripsList(searchedUser, searchedUser.myTrips, allUsers)
   }
-
-  // repopulateTripsList(agent, listOfTrips) {
-  //   console.log('repopulate trips list: ', listOfTrips);
-  //   domUpdates.populateTripsList(agent, listOfTrips);
-  // }
 }
 
 export default domUpdates;

@@ -4,6 +4,7 @@ button {
 
   &:hover {
     cursor:pointer;
+    opacity:.8;
   }
 
   &:disabled {
@@ -40,7 +41,8 @@ button.confirm {
 }
 
 button.approve,
-button.deny {
+button.deny,
+button.delete {
   padding:5px 10px;
   color:#fff;
   font-size:16px;
@@ -53,5 +55,8 @@ button.approve {
 
 button.deny {
   background-color: $redish-orange;
+}
 
+button.delete {
+  background-color: $red;
 }

@@ -1,0 +1,11 @@
+// Large screen sizes (lg)
+@media (max-width:1500px) {
+
+}
+
+// Medium screen sizes (md)
+@media (max-width:1100px) {
+  @include login--sm();
+  @include base--sm();
+  @include user-widget--sm();
+}

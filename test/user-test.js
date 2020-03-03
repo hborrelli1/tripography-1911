@@ -9,7 +9,7 @@ describe('User Tests', function() {
   let user2;
 
   beforeEach(function() {
-    user1 = new User('agent', tripData);
+    user1 = new User('agent', tripData.trips);
     user2 = new User('traveler', tripData);
   });
 
