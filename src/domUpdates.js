@@ -5,6 +5,7 @@ import Trip from './trip';
 import instantiateTraveler from './index.js';
 let dataController = new DataController();
 import datepicker from 'js-datepicker';
+var moment = require('moment');
 
 const domUpdates = {
   userType: null,
@@ -85,8 +86,23 @@ const domUpdates = {
       : tripsToList;
 
     tripsToDisplay.forEach(trip => {
+      let now = moment();
+
+      let approveButton = (userInfo.userType === 'agent' && trip.status !== 'approved')
+        ? `<button id="${trip.id}" class="approve" data-status="approve">Approve Trip</button>`
+        : '';
+
+      let denyButton = ((userInfo.userType === 'agent') && (trip.status === 'pending'))
+        ? `<button id="${trip.id}" class="deny" data-status="deny">Deny Trip</button>`
+        : '';
+
+      let deleteButton = ((userInfo.userType === 'agent') && (moment(now).isBefore(trip.date)) && (trip.status === 'approved'))
+        ? `<button id="${trip.id}" class="delete" data-status="delete">Delete Trip</button>`
+        : '';
+
+
       let buttonList = userInfo.userType === 'agent'
-        ? `<div class="button-block"><button id="${trip.id}" class="approve" data-status="approve">Approve Trip</button> <button id="${trip.id}" class="deny" data-status="deny">Deny Trip</button></div>`
+        ? `<div class="button-block">${approveButton}${denyButton}${deleteButton}</div>`
         : '';
 
       listOfTrips += `<li class="trip">
@@ -170,7 +186,7 @@ const domUpdates = {
     console.log(usersTrips);
 
     // instantiate Traverler
-    searchedUser = new Traveler('traveler', usersTrips, searchedUser);
+    searchedUser = new Traveler('agent', usersTrips, searchedUser);
     console.log(searchedUser);
 
     $('.traveler-trip-list').empty();
