@@ -42,10 +42,11 @@ const domUpdates = {
     let filterButtons = `<div class="trip-filter-bar">
         <p class="trip-status">Filter By Status:</p>
         <div class="filter-buttons">
-        <button id="upcomingTrips">Upcoming</button>
-        <button id="pendingTrips">Pending</button>
-        <button id="currentTrips">Current</button>
-        <button id="pastTrips">Past</button>
+        <button class="filter-button" id="allTrips" data-status="all">All</button>
+        <button class="filter-button" id="upcomingTrips" data-status="upcoming">Upcoming</button>
+        <button class="filter-button" id="pendingTrips" data-status="pending">Pending</button>
+        <button class="filter-button" id="currentTrips" data-status="current">Current</button>
+        <button class="filter-button" id="pastTrips" data-status="past">Past</button>
       </div>
       <button id="requestTripButton" class="confirm" type="button"><img src="./images/plus.png" alt="request a trip">Request Trip</button>
     </div>`;
@@ -185,6 +186,15 @@ const domUpdates = {
 
     $('.traveler-trip-list').empty();
     domUpdates.populateTripsList(searchedUser, searchedUser.myTrips, allUsers)
+  },
+
+  makeEstimatedCostHTML(destinationInfo, tripEstimate) {
+    return `<div class="trip-estimate-img" style="background-image:url(${destinationInfo.image})"></div>
+      <h4>Confirm Trip Booking:</h4>
+      <h2><span>To:</span>${destinationInfo.destination}</h2>
+      <p class="trip-total"><span>Total:</span> ${tripEstimate}</p>
+      <button id="confirmTripBooking" class="confirm" type="button"><img src="./images/check-mark.png" alt="confirm trip booking">Confirm Booking</button>
+    `;
   }
 }
 

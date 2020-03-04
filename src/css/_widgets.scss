@@ -1,18 +1,19 @@
 .widget {
+  border: $widget-border;
+  box-shadow: $box-shadow;
   padding:30px 20px;
-  border: 2px solid #000;
 }
 
 .user-profile-widget {
+  align-self: flex-start;
   display:flex;
   flex-flow:column;
-  align-self: flex-start;
-  width:25%;
   margin-right:5%;
+  width:25%;
 
   h4 {
-    font-size: 24px;
     border-bottom: 2px solid #000;
+    font-size: 24px;
   }
 
   p {
@@ -21,14 +22,14 @@
     margin-bottom:20px;
 
     span {
+      align-self:flex-start;
+      background-color:$medium-gray;
+      border-radius:4px;
       display:block;
       font-size:17px;
       font-weight:600;
-      padding:5px 10px;
-      background-color:$medium-gray;
-      align-self:flex-start;
-      border-radius:4px;
       margin-top:5px;
+      padding:5px 10px;
     }
   }
 }
@@ -38,37 +39,52 @@
 
   .trip-filter-bar {
     display:flex;
-    align-items: center;
+    flex-flow:column;
     margin-bottom:30px;
     position:relative;
 
+    .trip-status {
+      margin-bottom:5px;
+    }
+
     #requestTripButton {
+      margin-top:0px;
       position:absolute;
       right:0px;
-      margin-top:0px;
     }
   }
 
   .trip-search-bar {
     margin-bottom:30px;
+    text-align:center;
+
+    #search {
+      background-color:$medium-gray;
+      border:0;
+      border-radius:4px;
+      height:30px;
+      max-width:300px;
+      padding: 2px 5px;
+      width:100%;
+    }
   }
 }
 
 .traveler-trip-list {
   .trip {
-    margin-bottom:20px;
-    display:flex;
     align-items:center;
     background-color: #FFF;
-    box-shadow: $box-shadow;
+    background-color:$medium-gray;
+    display:flex;
+    margin-bottom:20px;
 
     .img-wrap {
-      width:40%;
-      height:auto;
-      min-height:200px;
-      @include background-cover-center;
-      margin-right:20px;
       align-self: stretch;
+      height:auto;
+      margin-right:20px;
+      min-height:200px;
+      width:40%;
+      @include background-cover-center;
     }
 
     .trip-content {
@@ -94,8 +110,8 @@
 
 @mixin user-widget--sm() {
   .user-profile-widget {
-    margin-right:0px;
     margin-bottom:30px;
+    margin-right:0px;
   }
 
   .trip-widget {
