@@ -6,3 +6,20 @@
   color:red;
   font-size:13px;
 }
+
+.confirm-booking,
+.error-booking {
+  marign-top:10px;
+  color:#fff;
+  font-family: $open-sans;
+  padding:5px 10px;
+  border-radius:4px;
+}
+
+.confirm-booking {
+  background-color:$green;
+}
+
+.error-booking {
+  background-color:$red;
+}

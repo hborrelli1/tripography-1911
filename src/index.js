@@ -146,7 +146,7 @@ const confirmTripBooking = async (currentUser, destinationInfo, numOfTravelers, 
   let bookingResponse = await dataController.bookTrip(tripPost);
 
   $('#confirmTripBooking').remove();
-  $('.trip-total').append(`<p>${bookingResponse.message}</p>`);
+  $('.trip-total').append(bookingResponse);
 }
 
 const displayTripRequestModal = (currentUser) => {

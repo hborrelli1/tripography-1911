@@ -1,7 +1,6 @@
 import chai from 'chai';
 const expect = chai.expect;
 
-import User from '../src/user';
 import Agent from '../src/agent';
 import tripData from '../sample-data/trip-data';
 

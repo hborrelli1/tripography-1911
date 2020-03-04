@@ -3,7 +3,6 @@ const expect = chai.expect;
 
 import Traveler from '../src/traveler';
 import Trip from '../src/trip';
-import User from '../src/user';
 import travelerData from '../sample-data/traveler-data';
 import tripData from '../sample-data/trip-data';
 
@@ -43,7 +42,8 @@ describe('Traveler Tests', function() {
         "duration": 8,
         "status": "approved",
         "suggestedActivities": []
-      },{
+      },
+      {
         "id": 4,
         "userID": 1,
         "destinationID": 14,
@@ -74,7 +74,8 @@ describe('Traveler Tests', function() {
         "duration": 8,
         "status": "approved",
         "suggestedActivities": []
-      },{
+      },
+      {
         "id": 4,
         "userID": 1,
         "destinationID": 14,
