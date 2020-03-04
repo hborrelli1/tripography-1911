@@ -60,7 +60,6 @@ const invokeTravelerAccount = (username) => {
 
 const instantiateTraveler = async (newUserID) => {
   currentUser = await dataController.getSingleUser(newUserID);
-
   currentUsersTrips = await dataController.getUsersTrips(newUserID);
 
   currentUsersTrips = currentUsersTrips.map(trip => {
@@ -83,45 +82,22 @@ const populateTravelDashboard = async (currentUser, newUserID) => {
 
 const populateAgentDashboard = async () => {
   let allUsers = await dataController.getAllUsers();
-
-  // let allTrips = await dataController.getUsersTrips();
-  // allTrips = allTrips.trips.map(trip => {
-  //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
-  //   return new Trip(trip, tripDestination);
-  // });
-
   let allTrips = await instantiateTrips();
 
   agent = new Agent('agent', allTrips);
-
   agent.getTodaysTravelers(allTrips);
   domUpdates.populateUserWidget(agent);
   domUpdates.populateTripsWidgetFilter(agent, allUsers);
 
-  let pendingTrips = await dataController.getPendingTrips();
+  let pendingTrips = await dataController.filterTripsByStatus('pending');
 
   pendingTrips = await instantiateTrips(pendingTrips);
-
-  // pendingTrips = pendingTrips.map(trip => {
-    //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
-    //   return new Trip(trip, tripDestination);
-    // });
-
   domUpdates.populateTripsList(agent, pendingTrips, allUsers);
 
   $('#search').on('change', async function() {
     let allUsers = await dataController.getAllUsers();
     domUpdates.searchForUser(allTrips, allUsers, allDestinations);
   });
-}
-
-const makeEstimatedCostHTML = (destinationInfo, tripEstimate) => {
-  return `<div class="trip-estimate-img" style="background-image:url(${destinationInfo.image})"></div>
-    <h4>Confirm Trip Booking:</h4>
-    <h2><span>To:</span>${destinationInfo.destination}</h2>
-    <p class="trip-total"><span>Total:</span> ${tripEstimate}</p>
-    <button id="confirmTripBooking" class="confirm" type="button"><img src="./images/check-mark.png" alt="confirm trip booking">Confirm Booking</button>
-  `;
 }
 
 const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) => {
@@ -145,7 +121,7 @@ const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) =>
     let totalPlusAgentFee = tripTotal + (tripTotal * .10);
 
     let tripEstimate = totalPlusAgentFee.toLocaleString("en-US", { style: "currency", currency: "USD" });
-    let generatedHTML = makeEstimatedCostHTML(destinationInfo, tripEstimate);
+    let generatedHTML = domUpdates.makeEstimatedCostHTML(destinationInfo, tripEstimate);
 
     $('.trip-estimate-container').append(`${generatedHTML}`);
     $('#confirmTripBooking').on('click', async function() {
@@ -194,28 +170,20 @@ const approveTripRequest = async (event) => {
   await dataController.approveTrip(approvePost);
 }
 
-const denyTripRequest = (event) => {
+const denyTripRequest = async (event) => {
   let tripID = Number(event.target.id);
   let deletePost = {
      "id": tripID,
   }
 
-  dataController.denyTrip(deletePost);
+  await dataController.denyTrip(deletePost);
 }
 
 const regenerateTrips = async () => {
   $('.traveler-trip-list').empty();
-
   let allUsers = await dataController.getAllUsers();
 
   return instantiateTrips();
-
-  // let allTrips = await dataController.getUsersTrips();
-  //
-  // return allTrips = allTrips.trips.map(trip => {
-  //   let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
-  //   return new Trip(trip, tripDestination);
-  // });
 }
 
 const agentActions = async (event) => {
@@ -243,13 +211,50 @@ const instantiateTrips = async (tripsToInstantiate) => {
       let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
       return new Trip(trip, tripDestination);
     });
-
   } else {
     return tripsToInstantiate.map(trip => {
       let tripDestination = allDestinations.destinations.find(destination => destination.id === trip.destinationID)
       return new Trip(trip, tripDestination);
     });
   }
+}
+
+const filterTrips = async (event) => {
+  let status = event.target.dataset.status;
+  let filteredTrips;
+  let currentUsersTrips = currentUser.myTrips;
+  let now = moment().format('YYYY/MM/DD');
+  let allUsers = await dataController.getAllUsers();
+
+  switch (status) {
+    case 'upcoming':
+      filteredTrips = currentUsersTrips.filter(trip => {
+        let startDate = moment(trip.date).format('YYYY/MM/DD');
+        return moment(now).isBefore(startDate);
+      });
+      break;
+    case 'pending':
+      filteredTrips = currentUsersTrips.filter(trip => trip.status === 'pending');
+      break;
+    case 'current':
+      filteredTrips = currentUsersTrips.filter(trip => {
+        let startDate = moment(trip.date, 'YYYY/MM/DD').format('YYYY/MM/DD');
+        let endDate = moment(trip.date, 'YYYY/MM/DD').add(trip.duration, 'days').format('YYYY/MM/DD');
+        return moment(now).isBetween(startDate, endDate);
+      });
+      break;
+    case 'past':
+      filteredTrips = currentUsersTrips.filter(trip => {
+        let endDate = moment(trip.date, 'YYYY/MM/DD').add(trip.duration, 'days').format('YYYY/MM/DD');
+        return moment(now).isAfter(endDate);
+      });
+      break;
+    case 'all':
+      filteredTrips = currentUsersTrips;
+  }
+
+  $('.traveler-trip-list').empty();
+  domUpdates.populateTripsList(currentUser, filteredTrips, allUsers);
 }
 
 // Start App
@@ -260,6 +265,9 @@ $('#userName, #password').on('keyup', domUpdates.validateForm);
 $('main').on('click', function(event) {
   displayTripRequestModal();
   agentActions(event);
+  if (event.target.classList.contains('filter-button')) {
+    filterTrips(event);
+  }
 });
 
 export default instantiateTraveler;

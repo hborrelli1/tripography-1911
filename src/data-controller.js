@@ -26,11 +26,11 @@ class DataController {
     return foundUser;
   }
 
-  async getPendingTrips() {
+  async filterTripsByStatus(status) {
     let response = await window.fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
     let allTrips = await response.json();
-    let pendingTrips = await allTrips.trips.filter(trip => trip.status === 'pending');
-    return pendingTrips;
+    let filteredTrips = await allTrips.trips.filter(trip => trip.status === status);
+    return filteredTrips;
   }
 
   async bookTrip(tripPost) {
@@ -76,6 +76,13 @@ class DataController {
     let allUsers = await response.json();
     return allUsers;
   }
+
+  // async filterTripsByDate(date) {
+  //   let response = await window.fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
+  //   let allTrips = await response.json();
+  //   let filteredTrips = await allTrips.trips.filter(trip => trip.status === status);
+  //   return filteredTrips;
+  // }
 
 }
 
