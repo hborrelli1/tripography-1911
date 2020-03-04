@@ -42,7 +42,6 @@ class DataController {
       body: JSON.stringify(tripPost)
     });
 
-    // let tripRequestResponse = await response;
     let message;
     if (response.ok) {
       message = '<div class="confirm-booking">Your trip has been booked!</div>';
@@ -82,14 +81,6 @@ class DataController {
     let allUsers = await response.json();
     return allUsers;
   }
-
-  // async filterTripsByDate(date) {
-  //   let response = await window.fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
-  //   let allTrips = await response.json();
-  //   let filteredTrips = await allTrips.trips.filter(trip => trip.status === status);
-  //   return filteredTrips;
-  // }
-
 }
 
 export default DataController;

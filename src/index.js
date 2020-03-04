@@ -125,7 +125,6 @@ const calculateEstimatedTotalTripRequest = (allDestinations, currentTraveler) =>
 
     $('.trip-estimate-container').append(`${generatedHTML}`);
     $('#confirmTripBooking').on('click', async function() {
-
       confirmTripBooking(currentUser, destinationInfo, numOfTravelers, formattedDate, tripDuration);
     });
   }

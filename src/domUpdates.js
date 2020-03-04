@@ -193,8 +193,7 @@ const domUpdates = {
       <h4>Confirm Trip Booking:</h4>
       <h2><span>To:</span>${destinationInfo.destination}</h2>
       <p class="trip-total"><span>Total:</span> ${tripEstimate}</p>
-      <button id="confirmTripBooking" class="confirm" type="button"><img src="./images/check-mark.png" alt="confirm trip booking">Confirm Booking</button>
-    `;
+      <button id="confirmTripBooking" class="confirm" type="button"><img src="./images/check-mark.png" alt="confirm trip booking">Confirm Booking</button>`;
   }
 }
 
