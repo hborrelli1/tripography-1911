@@ -10,11 +10,11 @@ Learning goals for this project include:
 * Create a robust test suite that thoroughly tests all functionality of a client-side application.
 
 ### Screenshots
-[Login Screen](https://user-images.githubusercontent.com/15935329/75844321-e4980d80-5d92-11ea-895c-5d50114327f2.png)
-[Traveler Dashboard](https://user-images.githubusercontent.com/15935329/75844326-e661d100-5d92-11ea-8bb9-df8a94e346f9.png)
-[Booking a Trip](https://user-images.githubusercontent.com/15935329/75844332-e95cc180-5d92-11ea-8607-0dd553bc5f77.png)
-[Booking a Trip 2](https://user-images.githubusercontent.com/15935329/75844334-e9f55800-5d92-11ea-92df-36813ec7d1bb.png)
-[Agent Dashboard](https://user-images.githubusercontent.com/15935329/75844335-eb268500-5d92-11ea-97f0-82ff8018aba7.png)
+![Login Screen](https://user-images.githubusercontent.com/15935329/75844321-e4980d80-5d92-11ea-895c-5d50114327f2.png)
+![Traveler Dashboard](https://user-images.githubusercontent.com/15935329/75844326-e661d100-5d92-11ea-8bb9-df8a94e346f9.png)
+![Booking a Trip](https://user-images.githubusercontent.com/15935329/75844332-e95cc180-5d92-11ea-8607-0dd553bc5f77.png)
+![Booking a Trip 2](https://user-images.githubusercontent.com/15935329/75844334-e9f55800-5d92-11ea-92df-36813ec7d1bb.png)
+![Agent Dashboard](https://user-images.githubusercontent.com/15935329/75844335-eb268500-5d92-11ea-97f0-82ff8018aba7.png)
 
 ### Technologies
 * **The fetch API** to retrieve and add data
