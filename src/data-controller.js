@@ -42,9 +42,15 @@ class DataController {
       body: JSON.stringify(tripPost)
     });
 
-    // Add response handling here.
-    let tripRequestResponse = await response.json();
-    return tripRequestResponse;
+    // let tripRequestResponse = await response;
+    let message;
+    if (response.ok) {
+      message = '<div class="confirm-booking">Your trip has been booked!</div>';
+    } else {
+      message = '<div class="error-booking">Something went wrong. Please try again later.</div>';
+    }
+
+    return message;
   }
 
   async approveTrip(approvePost) {

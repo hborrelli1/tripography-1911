@@ -56,7 +56,7 @@ describe('DataController Tests', function() {
   });
 
   it('should be able to retreive all pending trips from server', function() {
-    dataController.getPendingTrips();
+    dataController.filterTripsByStatus('pending');
 
     expect(window.fetch).to.be.called(1);
     expect(window.fetch).to.be.called.with('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
